@@ -5,3 +5,6 @@ PasswordSuper
 Question.objects.all() #list all questions
 q = Question(question_text="How would you rate this module?")
 >>> q.save() #set question and save
+
+pip freeze > requirements.txt
+pip install -r 'requirements.txt'
