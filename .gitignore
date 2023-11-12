@@ -11,5 +11,5 @@ npm-debug.log.*
 ######################
 # Pycharm
 ######################
-.idea/misc.xml
+.idea/
 **/__pycache__/
