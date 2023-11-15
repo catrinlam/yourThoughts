@@ -11,26 +11,25 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 export default function Header() {
     return (
-        <AppBar position="static" >
+        <AppBar position="static" sx={{ backgroundColor: '#000000' }}>
             <Toolbar>
                 {/*Inside the IconButton, we
            can render various icons*/}
-                <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{mr: 2}}
-                >
-                    {/*This is a simple Menu
-             Icon wrapped in Icon */}
-                    <MenuIcon/>
-                </IconButton>
+             {/*   <IconButton*/}
+             {/*       size="large"*/}
+             {/*       edge="start"*/}
+             {/*       color="inherit"*/}
+             {/*       aria-label="menu"*/}
+             {/*       sx={{mr: 2}}*/}
+             {/*   >*/}
+             {/*       /!*This is a simple Menu*/}
+             {/*Icon wrapped in Icon *!/*/}
+             {/*       <MenuIcon/>*/}
+             {/*   </IconButton>*/}
                 {/* The Typography component applies
            default font weights and sizes */}
 
-                <Typography variant="h6"
-                            component="div" sx={{flexGrow: 1}}>
+                <Typography variant="h6" color="white" align="left" component="div" sx={{flexGrow: 1}}>
                     YourThoughts
                 </Typography>
                 {/*<Button color="inherit">Login</Button> */}

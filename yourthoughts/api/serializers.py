@@ -6,6 +6,7 @@ class SurveySerializer(serializers.ModelSerializer):
         fields = ['id', 'module']
 
 class QuestionSerializer(serializers.ModelSerializer):
+    survey = serializers.StringRelatedField(many=True)
     class Meta:
         model = models.Question
         fields = ['id', 'survey', 'text', 'pub_date']

@@ -12,7 +12,7 @@ class Survey(models.Model):
         return self.module
 
 class Question(models.Model):
-    # survey = models.ManyToManyField(Survey, through=SurveyQuestion)
+    # survey = models.ManyToManyField(SurveyForm, through=SurveyQuestion)
     text = models.CharField(max_length=200)
     pub_date = models.DateTimeField(auto_now_add=True)
 
@@ -39,7 +39,7 @@ class Submission(models.Model):
         return self.feedback
 
 # class Submission(models.Model):
-#     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+#     survey = models.ForeignKey(SurveyForm, on_delete=models.PROTECT)
 #     #participant_email = models.EmailField(max_length=255)
 #     answer = models.ManyToManyField(Choice)
 #     #status = models.CharField(max_length=255)x
