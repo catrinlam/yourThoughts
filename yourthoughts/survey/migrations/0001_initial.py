@@ -32,8 +32,8 @@ class Migration(migrations.Migration):
             name='SurveyQuestion',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.question')),
-                ('survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.survey')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.question')),
+                ('survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.survey')),
             ],
         ),
         migrations.CreateModel(
@@ -43,8 +43,8 @@ class Migration(migrations.Migration):
                 ('rating', models.FloatField(default=0, validators=[django.core.validators.MaxValueValidator(5)])),
                 ('feedback', models.CharField(max_length=200, null=True)),
                 ('submit_date', models.DateTimeField(auto_now_add=True)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.question')),
-                ('survey', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.survey')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='survey.question')),
+                ('survey', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='survey.survey')),
             ],
         ),
     ]
