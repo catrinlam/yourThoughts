@@ -12,3 +12,10 @@ pip install -r 'requirements.txt'
 database: delete db.sqlite + migration (except __init__.py)
 
 ssh -i "myOracleCloudKey" ubuntu@152.67.138.38
+
+docker:
+docker-compose up --build
+docker-compose down
+docker-compose logs -f
+docker-compose ls
+docker image:  docker run -dp 127.0.0.1:3000:8000 backend:hi
