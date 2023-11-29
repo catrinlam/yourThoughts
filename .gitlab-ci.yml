@@ -64,10 +64,10 @@ publish-docker:
   script:
     - echo "pushing ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_USER} ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t ${CI_REGISTRY_IMAGE}:djangoapi yourthoughts/
-    - docker push ${CI_REGISTRY_IMAGE}:djangoapi
-    - docker build -t ${CI_REGISTRY_IMAGE}:react frontend/
-    - docker push ${CI_REGISTRY_IMAGE}:react
+    - docker build -t ${CI_REGISTRY_IMAGE}:djangoapi-latest yourthoughts/
+    - docker push ${CI_REGISTRY_IMAGE}:djangoapi-latest
+    - docker build -t ${CI_REGISTRY_IMAGE}:react-latest frontend/
+    - docker push ${CI_REGISTRY_IMAGE}:react-latest
     - echo "Docker built."
 
 deploy-git:
@@ -77,17 +77,17 @@ deploy-git:
     - release
   when: on_success
   before_script:
-    - chmod og= $RSA
+    - chmod og= $KEY
     - apk update && apk add openssh-client
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker compose -f ~/cxl031/docker-compose.yml down || true"
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "rm -rf ~/cxl031 || true"
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:djangoapi-latest"
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:react-latest"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker compose -f ~/cxl031/docker-compose.yml down || true"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "rm -rf ~/cxl031 || true"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:djangoapi-latest"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:react-latest"
   script:
-    - scp -o StrictHostKeyChecking=no -i $RSA -r . $VM_USER@$VM:~/team-project-deployment
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker compose -f ~/cxl031/docker-compose.yml up -d"
-    - ssh -o StrictHostKeyChecking=no -i $RSA $VM_USER@$VM "docker image prune -f"
+    - scp -o StrictHostKeyChecking=no -i $KEY -r . $VM_USER@$VM:~/cxl031
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker compose -f ~/cxl031/docker-compose.yml up -d"
+    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker image prune -f"
 
 #stages:          # List of stages for jobs, and their order of execution
 #  - build
