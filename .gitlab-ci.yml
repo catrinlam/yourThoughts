@@ -63,7 +63,7 @@ publish-docker:
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "pushing ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_USER} ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t ${CI_REGISTRY_IMAGE}:djangoapi-latest yourthoughts/
     - docker push ${CI_REGISTRY_IMAGE}:djangoapi-latest
     - docker build -t ${CI_REGISTRY_IMAGE}:react-latest frontend/
@@ -81,7 +81,7 @@ deploy-git:
     - apk update && apk add openssh-client
     - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker compose -f ~/cxl031/docker-compose.yml down || true"
     - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "rm -rf ~/cxl031 || true"
-    - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    # - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
     - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:djangoapi-latest"
     - ssh -o StrictHostKeyChecking=no -i $KEY $VM_USER@$VM "docker pull ${CI_REGISTRY_IMAGE}:react-latest"
   script:
