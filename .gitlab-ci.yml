@@ -38,6 +38,7 @@ code-check:
 #    - release
   script:
     - echo "start check"
+    - pip install pytest
     - pip install -r yourthoughts/requirements.txt
     - python yourthoughts/manage.py check
 
