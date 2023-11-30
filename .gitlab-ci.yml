@@ -34,8 +34,8 @@ stages:
 code-check:
   image: python:3.11.6
   stage: check
-  only:
-    - release
+#  only:
+#    - release
   script:
     - echo "start check"
     - pip install -r yourthoughts/requirements.txt
@@ -45,8 +45,8 @@ code-check:
 django-tests:
   image: python:3.11.6
   stage: test
-  only:
-    - release
+#  only:
+#    - release
   script:
     - pip install -r yourthoughts/requirements.txt
     - pytest yourthoughts
