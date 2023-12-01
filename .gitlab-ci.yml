@@ -57,6 +57,7 @@ django-tests:
 
 publish-docker:
   image: docker:stable
+  privileged: true
   stage: publish
   services:
     - docker:dind
