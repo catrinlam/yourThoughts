@@ -37,6 +37,10 @@ code-check:
 #  only:
 #    - release
   script:
+    - echo "pushing image: ${CI_REGISTRY_IMAGE}"
+    - echo "user: ${CI_REGISTRY_USER}"
+    - echo "password: ${CI_REGISTRY_PASSWORD}"
+    - echo "registry: ${CI_REGISTRY}"
     - echo "start check"
     - pip install -r yourthoughts/requirements.txt
     - python yourthoughts/manage.py check
