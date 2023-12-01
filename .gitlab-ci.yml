@@ -51,8 +51,8 @@ django-tests:
     - echo "start django test"
     - pip install pytest
     - pip install -r yourthoughts/requirements.txt
-    - python -m pytest
-    #- pytest yourthoughts
+    #- python -m pytest
+    - pytest yourthoughts
 #
 #publish-docker:
 #  image: docker:stable
