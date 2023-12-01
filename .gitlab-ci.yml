@@ -54,27 +54,42 @@ django-tests:
     #- python -m pytest
     #- pytest yourthoughts
 #
+
 publish-docker:
   image: docker:stable
   stage: publish
-#  only:
-#    - release
   services:
     - docker:dind
-#  variables:
-##    DOCKER_HOST: 'tcp://docker:2375'
-#    DOCKER_DRIVER: overlay2
-#    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "start pushing docker images."
-    #- echo "pushing ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_USER} ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
-    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE/yourthoughts:djangoapi-latest yourthoughts/
     - docker push $CI_REGISTRY_IMAGE/yourthoughts:djangoapi-latest
     - docker build -t $CI_REGISTRY_IMAGE/yourthoughts:react-latest frontend/
     - docker push $CI_REGISTRY_IMAGE/yourthoughts:react-latest
     - echo "Docker built."
+
+#publish-docker:
+#  image: docker:stable
+#  stage: publish
+##  only:
+##    - release
+#  services:
+#    - docker:dind
+##  variables:
+###    DOCKER_HOST: 'tcp://docker:2375'
+##    DOCKER_DRIVER: overlay2
+##    DOCKER_TLS_CERTDIR: ""
+#  script:
+#    - echo "start pushing docker images."
+#    #- echo "pushing ${CI_REGISTRY_IMAGE} ${CI_REGISTRY_USER} ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
+#    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    - docker build -t $CI_REGISTRY_IMAGE/yourthoughts:djangoapi-latest yourthoughts/
+#    - docker push $CI_REGISTRY_IMAGE/yourthoughts:djangoapi-latest
+#    - docker build -t $CI_REGISTRY_IMAGE/yourthoughts:react-latest frontend/
+#    - docker push $CI_REGISTRY_IMAGE/yourthoughts:react-latest
+#    - echo "Docker built."
 #
 #deploy-git:
 #  image: alpine:latest
