@@ -37,7 +37,7 @@ code-check:
 #  only:
 #    - release
   script:
-    - echo "pushing image: ${CI_REGISTRY_IMAGE}"
+    - echo "pushing image:${CI_REGISTRY_IMAGE}"
     # - echo "user: ${CI_REGISTRY_USER}"
     # - echo "password: ${CI_REGISTRY_PASSWORD}"
     # - echo "registry: ${CI_REGISTRY}"
