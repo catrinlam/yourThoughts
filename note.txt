@@ -11,8 +11,22 @@ pip install -r 'requirements.txt'
 
 database: delete db.sqlite + migration (except __init__.py)
 
-
 python manage.py runserver
 
 frontend:
 npm start
+
+ssh -i "myOracleCloudKey" ubuntu@152.67.138.38
+
+docker:
+docker-compose up --build
+docker-compose down
+docker-compose logs -f
+docker-compose ls
+docker image:  docker run -dp 127.0.0.1:3000:8000 backend:hi
+
+sudo nano /etc/nginx/sites-available/default
+sudo service nginx restart
+sudo nginx -t
+systemctl status nginx.service
+nginx -t -c /etc/nginx/nginx.conf
