@@ -10,3 +10,9 @@ pip freeze > requirements.txt
 pip install -r 'requirements.txt'
 
 database: delete db.sqlite + migration (except __init__.py)
+
+
+python manage.py runserver
+
+frontend:
+npm start
