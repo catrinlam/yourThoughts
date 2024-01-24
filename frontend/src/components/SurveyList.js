@@ -77,12 +77,12 @@ function SurveyList() {
   //
   // return (
   //       <div>
-  //           <h2>survey:</h2>
-  //           {surveyList.map((survey, index) => {
+  //           <h2>feedback:</h2>
+  //           {surveyList.map((feedback, index) => {
   //               return (
-  //                   <div className="survey-item" key={index}>
-  //                     <Select options={[{ value: survey.module, label: survey.module }]} />
-  //                       <p>{survey.module}</p>
+  //                   <div className="feedback-item" key={index}>
+  //                     <Select options={[{ value: feedback.module, label: feedback.module }]} />
+  //                       <p>{feedback.module}</p>
   //                   </div>
   //               );
   //           })}

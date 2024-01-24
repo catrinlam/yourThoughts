@@ -60,7 +60,7 @@ export default Header;
 //     // <Router>
 //     //   <Routes>
 //     //     <Route path="/" element={<SurveyList />} />
-//     //     <Route path="/survey" element={<SurveyForm />} />
+//     //     <Route path="/feedback" element={<SurveyForm />} />
 //     //     {/*<Route path="/result" element={<SurveyList />} />*/}
 //     //   </Routes>
 //     // </Router>

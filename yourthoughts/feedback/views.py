@@ -9,21 +9,29 @@ from . import serializers
 
 # Create your views here.
 
-class SurveyList(generics.ListCreateAPIView):
-    queryset = models.Survey.objects.all()
-    serializer_class = serializers.SurveySerializer
+class FeedbackList(generics.RetrieveAPIView):
+    queryset = models.Feedback.objects.all()
+    serializer_class = serializers.FeedbackSerializer
 
-class Survey(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Survey.objects.all()
-    serializer_class = serializers.SurveySerializer
+class Feedback(generics.RetrieveUpdateAPIView):
+    queryset = models.Feedback.objects.all()
+    serializer_class = serializers.FeedbackSerializer
 
-class QuestionList(generics.ListCreateAPIView):
-    queryset = models.Question.objects.all()
-    serializer_class = serializers.QuestionSerializer
-
-class SubmissionList(generics.ListCreateAPIView):
-    queryset = models.Submission.objects.all()
-    serializer_class = serializers.SubmissionSerializer
+# class SurveyList(generics.ListCreateAPIView):
+#     queryset = models.Survey.objects.all()
+#     serializer_class = serializers.SurveySerializer
+#
+# class Survey(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.Survey.objects.all()
+#     serializer_class = serializers.SurveySerializer
+#
+# class QuestionList(generics.ListCreateAPIView):
+#     queryset = models.Question.objects.all()
+#     serializer_class = serializers.QuestionSerializer
+#
+# class SubmissionList(generics.ListCreateAPIView):
+#     queryset = models.Submission.objects.all()
+#     serializer_class = serializers.SubmissionSerializer
 
 
 """ Concrete View Classes

@@ -147,8 +147,8 @@ export default SurveyForm;
 //  ]
 //     };
 //
-//   const survey = new Survey.Model(surveyJson);
-//   survey.onComplete.add((sender, options) => {
+//   const feedback = new Survey.Model(surveyJson);
+//   feedback.onComplete.add((sender, options) => {
 //         console.log(JSON.stringify(sender.data, null, 3));
 //     });
 //   // const alertResults = useCallback((sender) => {
@@ -160,9 +160,9 @@ export default SurveyForm;
 //   //   // )
 //   // }, []);
 //   //
-//   // survey.onComplete.add(alertResults);
+//   // feedback.onComplete.add(alertResults);
 //
-//   return <Survey model={survey} />;
+//   return <Survey model={feedback} />;
 //
 //
 //

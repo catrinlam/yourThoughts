@@ -86,11 +86,11 @@ export default App;
 //     ])
 // }, [])
 //
-// surveyList.map((survey, index) => {
+// surveyList.map((feedback, index) => {
 //         return (
 //             <div className="App">
 //                 <Header/>
-//                 {/*<div className="survey-item">*/}
+//                 {/*<div className="feedback-item">*/}
 //                 {/*    <h2>{module.name}</h2>*/}
 //                 {/*</div>*/}
 //             </div>
