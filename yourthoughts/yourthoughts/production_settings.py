@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "corsheaders",
 
-    'survey.apps.SurveyConfig',
+    'feedback.apps.SurveyConfig',
 ]
 
 MIDDLEWARE = [

@@ -9,13 +9,14 @@ from . import serializers
 
 # Create your views here.
 
-class FeedbackList(generics.RetrieveAPIView):
+class FeedbackList(generics.ListAPIView):
     queryset = models.Feedback.objects.all()
     serializer_class = serializers.FeedbackSerializer
 
 class Feedback(generics.RetrieveUpdateAPIView):
     queryset = models.Feedback.objects.all()
     serializer_class = serializers.FeedbackSerializer
+    # lookup_field =
 
 # class SurveyList(generics.ListCreateAPIView):
 #     queryset = models.Survey.objects.all()
@@ -67,7 +68,7 @@ Used for read-write-delete endpoints to represent a single model instance.
 #     return Response(serializer.data)
 #
 # #@api_view(['GET'])
-# def survey(request, module_wanted):
+# def feedback(request, module_wanted):
 #     module_name = models.SurveyForm.objects.get(module=module_wanted)
 #     serializer = serializers.SurveySerializer(module_name, many=False)
 #     return Response(serializer.data)
@@ -79,8 +80,8 @@ Used for read-write-delete endpoints to represent a single model instance.
 #     return Response(serializer.data)
 #     # return render('hi',request)
 
-# def survey(request, survey_id):
-#     return render('survey',request)
+# def feedback(request, survey_id):
+#     return render('feedback',request)
 #
 # def results(request, survey_id):
 #     return render('results',request)
@@ -90,16 +91,16 @@ Used for read-write-delete endpoints to represent a single model instance.
 #
 #     routes = [
 #         {
-#             'Endpoint': '/survey/',
+#             'Endpoint': '/feedback/',
 #             'method': 'GET',
 #             'body': None,
-#             'description': 'Returns an array of survey'
+#             'description': 'Returns an array of feedback'
 #         },
 #         {
-#             'Endpoint': '/survey/id',
+#             'Endpoint': '/feedback/id',
 #             'method': 'GET',
 #             'body': None,
-#             'description': 'Returns a single survey object'
+#             'description': 'Returns a single feedback object'
 #         },
 #     ]
 #     return Response(routes)

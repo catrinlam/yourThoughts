@@ -28,7 +28,7 @@ class AcademicYear(models.Model):
 
 
 class Feedback(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     academicYear = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
     # feedbackId = models.IntegerField()
     moduleName = models.CharField(max_length=50)
@@ -36,9 +36,9 @@ class Feedback(models.Model):
     lecturerQuestion = models.CharField(max_length=200)
     # questions_questionId = models.IntegerField()
     materialRating = models.FloatField(default=0, validators=[MaxValueValidator(5)])
-    materialFeedback = models.CharField(max_length=500, null=True)
+    materialFeedback = models.CharField(max_length=500, null=True, blank=True)
     lecturerRating = models.FloatField(default=0, validators=[MaxValueValidator(5)])
-    lecturerFeedback = models.CharField(max_length=500, null=True)
+    lecturerFeedback = models.CharField(max_length=500, null=True, blank=True)
     submitDate = models.DateTimeField(auto_now_add=True)
 
 # class Survey(models.Model):
@@ -49,7 +49,7 @@ class Feedback(models.Model):
 #         return self.module
 #
 # class Question(models.Model):
-#     # survey = models.ManyToManyField(SurveyForm, through=SurveyQuestion)
+#     # feedback = models.ManyToManyField(SurveyForm, through=SurveyQuestion)
 #     text = models.CharField(max_length=200)
 #     pub_date = models.DateTimeField(auto_now_add=True)
 #
@@ -57,15 +57,15 @@ class Feedback(models.Model):
 #         return self.text
 #
 # class SurveyQuestion(models.Model):
-#     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+#     feedback = models.ForeignKey(Survey, on_delete=models.CASCADE)
 #     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 #
 # # Update the ManyToManyField in Question model after defining SurveyQuestion
-# Question.survey = models.ManyToManyField(Survey, through=SurveyQuestion)
+# Question.feedback = models.ManyToManyField(Survey, through=SurveyQuestion)
 #
 #
 # class Submission(models.Model):
-#     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+#     feedback = models.ForeignKey(Survey, on_delete=models.PROTECT)
 #     question = models.ForeignKey(Question, on_delete=models.PROTECT)
 #     rating = models.FloatField(default=0, validators=[MaxValueValidator(5)])
 #     feedback = models.CharField(max_length=200, null=True)
@@ -76,7 +76,7 @@ class Feedback(models.Model):
 #         return self.feedback
 
 # class Submission(models.Model):
-#     survey = models.ForeignKey(SurveyForm, on_delete=models.PROTECT)
+#     feedback = models.ForeignKey(SurveyForm, on_delete=models.PROTECT)
 #     #participant_email = models.EmailField(max_length=255)
 #     answer = models.ManyToManyField(Choice)
 #     #status = models.CharField(max_length=255)x

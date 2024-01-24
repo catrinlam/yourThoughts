@@ -2,6 +2,10 @@ from django.contrib import admin
 from . import models
 
 # Register your models here.
+
+# class StudentAdmin(admin.ModelAdmin):
+#     fields =
+
 # class SurveyQuestionInline(admin.TabularInline):
 #   model = models.SurveyQuestion
 #   show_change_link = True

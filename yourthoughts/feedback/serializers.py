@@ -31,17 +31,17 @@ class FeedbackSerializer(serializers.ModelSerializer):
 #         fields = ['id', 'module']
 #
 # class QuestionSerializer(serializers.ModelSerializer):
-#     survey = serializers.StringRelatedField(many=True)
+#     feedback = serializers.StringRelatedField(many=True)
 #     class Meta:
 #         model = models.Question
-#         fields = ['id', 'survey', 'text', 'pub_date']
+#         fields = ['id', 'feedback', 'text', 'pub_date']
 #
 # class SurveyQuestionSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = models.SurveyQuestion
-#         fields = ['id', 'survey', 'question']
+#         fields = ['id', 'feedback', 'question']
 #
 # class SubmissionSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = models.Submission
-#         fields = ['id', 'survey', 'question', 'rating', 'feedback', 'submit_date']
+#         fields = ['id', 'feedback', 'question', 'rating', 'feedback', 'submit_date']
