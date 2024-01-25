@@ -1,0 +1,48 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: action/checkout@v3
+    - name: ssh upload
+      uses: easingthemes/ssh-deploy@v4.1.8
+      with:
+        # Private key part of an SSH key pair
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        # Remote host
+        REMOTE_HOST: ${{ secrets.HOSTNAME }}
+        # Remote user
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        # Remote port
+        REMOTE_PORT: ${{ secrets.PORT }}
+        # Make sure to delete unused files as well
+        ARGS: "-zr --delete"
+        # Source directory, path relative to $GITHUB_WORKSPACE root, eg: dist/
+        SOURCE: "./"
+        # Target directory
+        TARGET: ${{ secrets.DEPLOY_DIR }}
+
+
+  build-and-serve:
+    name: build and serve
+    needs: [upload]
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOSTNAME }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.DEPLOY_DIR }}
+          echo "${{ secrets.DOT_ENV }}"
+          sudo docker-compose down
+          sudo docker-compose up --build -d
