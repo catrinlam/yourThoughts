@@ -43,6 +43,5 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.DEPLOY_DIR }}
-          echo "${{ secrets.DOT_ENV }}"
           sudo docker-compose down
           sudo docker-compose up --build -d
