@@ -60,9 +60,9 @@ publish-docker:
   image: docker:stable
   stage: publish
   services:
-    - name: docker:dind
-      alias: docker
-    # - docker:dind
+    # - name: docker:dind
+    #   alias: docker
+    - docker:dind
   variables: 
     DOCKER_HOST: tcp://docker:2376
   script:
