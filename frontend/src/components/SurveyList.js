@@ -1,96 +1,211 @@
 import axios from 'axios'
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import Select from 'react-select'
 
 // import { MdOutlineDeleteOutline, MdEditNote, MdOutlineCheckBox, MdOutlineCheckBoxOutlineBlank } from 'react-icons/md'
 
 function SurveyList() {
-  const [surveyList, setSurvey] = useState([])
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [moduleResults, setModuleResults] = useState(null);
+    const [surveyList, setSurvey] = useState([])
+    const [selectedModule, setSelectedModule] = useState(null);
+    const [moduleResults, setModuleResults] = useState(null);
 
-  useEffect(() => {
-    // async function fetchSurvey(){
-    //   const response = await fetch('http://127.0.0.1:8000/api/');
-    //   response.json()
-    //       .then(response => setSurvey(response.response))
-    //       .catch(err => setErrors(err));
-    // }
-    // fetchSurvey();
-    setSurvey([
-      {
-        // "id": 1,
-        "module": "Module 1",
-        "questions": [
-          {
-            "question": "Question 1",
-            "answers": ["Answer 1", "Answer 2", "Answer 3"]
-          },
-          {
-            "question": "Question 2",
-            "answers": ["Answer 1", "Answer 2", "Answer 3"]
-          }
-        ]
-      },
-      {
-        "module": "Team Project",
-        "questions": [
-          {
-            "question": "Question 1",
-            "answers": ["Answer 1", "Answer 2", "Answer 3"]
-          },
-          {
-            "question": "Question 2",
-            "answers": ["Answer 1", "Answer 2", "Answer 3"]
-          }
-        ]
-      }
-    ])
-  }, [])
+    useEffect(() => {
+        const fetchModules = async () => {
+            const response = await axios.get('http://127.0.0.1:8000/api/');
+            setSurvey(response.data);
+        };
 
-  const options = surveyList.map(survey => ({value: survey.module, label: survey.module}));
+        fetchModules();
+    }, []);
 
-  const handleChange = async selectedOption => {
-  setSelectedModule(selectedOption);
-  const response = await axios.get(`http://127.0.0.1:8000/api/results/${selectedOption.value}`);
-  setModuleResults(response.data);
-};
+    const uniqueModules = Array.from(new Set(surveyList.map(survey => survey.moduleName)));
+    const options = uniqueModules.map(moduleName => {
+        const correspondingSurvey = surveyList.find(survey => survey.moduleName === moduleName);
+        return {value: correspondingSurvey.id, label: moduleName};
+    });
 
-  return (
-    <div>
-      <h2>survey:</h2>
-      <Select options={options} onChange={handleChange}/>
-      <p>Selected Module: {selectedModule ? selectedModule.label : 'None'}</p>
-      {moduleResults && (
+
+    // const options = surveyList.map(survey => ({value: survey.id, label: survey.module}));
+
+    const handleChange = async selectedOption => {
+        setSelectedModule(selectedOption);
+        const response = await axios.get(`http://127.0.0.1:8000/api/${selectedOption.label}`);
+        console.log(response.data);
+        setModuleResults(response.data);
+    };
+
+    const materialRatingAvg = useMemo(() => {
+  if (!moduleResults) {
+    return null;
+  }
+
+  const materialRatingSum = moduleResults.reduce((sum, result) => sum + result.materialRating, 0);
+  return (materialRatingSum / moduleResults.length).toFixed(2);
+}, [moduleResults]);
+
+    const lecturerRatingAvg = useMemo(() => {
+  if (!moduleResults) {
+    return null;
+  }
+
+  const lecturerRatingSum = moduleResults.reduce((sum, result) => sum + result.lecturerRating, 0);
+  return (lecturerRatingSum / moduleResults.length).toFixed(2);
+}, [moduleResults]);
+
+
+
+    return (
         <div>
-          <h3>Results for {selectedModule.label}:</h3>
-          {/* Display the results here */}
-        </div>
-      )}
-    </div>
-  );
+            <h2>survey:</h2>
+            <Select options={options} onChange={handleChange}/>
+            {moduleResults && (
+                <div>
+                    <h3>Results for {selectedModule.label}:</h3>
+                    <div>
+                        <h4>{selectedModule.label}</h4>
+                        <h5>Material Ratings</h5>
+                        <p>Average Material Rating: {materialRatingAvg}</p>
+                        <h5>Material Feedbacks</h5>
+                        {moduleResults.map((result, index) => (
+                            <p key={index}>{result.materialFeedback}</p>
+                        ))}
+                        <h5>Lecturer Ratings</h5>
+                        <p>Average Lecturer Rating: {lecturerRatingAvg}</p>
+                        <h5>Lecturer Feedbacks</h5>
+                        {moduleResults.map((result, index) => (
+                            <p key={index}>{result.lecturerFeedback}</p>
+                        ))}
+                    </div>
+                </div>
+            )}
 
-  // const getSurvey = async () => {
-  //   const response = await fetch('http://127.0.0.1:8000/api/')
-  //   const data = response.json()
-  // }
-  //
-  // return (
-  //       <div>
-  //           <h2>feedback:</h2>
-  //           {surveyList.map((feedback, index) => {
-  //               return (
-  //                   <div className="feedback-item" key={index}>
-  //                     <Select options={[{ value: feedback.module, label: feedback.module }]} />
-  //                       <p>{feedback.module}</p>
-  //                   </div>
-  //               );
-  //           })}
-  //       </div>
-  //   );
+        </div>
+    );
+
 }
 
 export default SurveyList;
+
+// {moduleResults.map((result, index) => (
+//                             <p key={index}>Rating: {result.lecturerRating}</p>
+//                         ))}
+
+{/*{moduleResults.map((result, index) => (*/}
+                        {/*    // <p>Average Material Rating: {materialRatingAvg.toFixed(2)}</p>*/}
+                        {/*    // <p key={index}>Rating: {result.materialRating}</p>*/}
+                        {/*))}*/}
+
+    // const handleChange = async selectedOption => {
+    //     setSelectedModule(selectedOption);
+    //     const response = await axios.get(`http://127.0.0.1:8000/api/feedback/${selectedOption.value}`);
+    //     console.log(response.data);
+    //     setModuleResults(response.data);
+    // };
+
+{/*<Select options={surveyList.map(survey => ({value: survey.id, label: survey.moduleName}))} onChange={handleChange}/>*/}
+            {/*<Select options={options} onChange={handleChange}/>*/}
+            {/*<p>Selected Module: {selectedModule ? selectedModule.label : 'None'}</p>*/}
+            {/*{moduleResults && (*/}
+            {/*    <div>*/}
+            {/*      <h3>Results for {selectedModule.label}:</h3>*/}
+            {/*      <div>*/}
+            {/*        <h4>{moduleResults.moduleName}</h4>*/}
+            {/*        <p>{moduleResults.materialQuestion}</p>*/}
+            {/*        <p>Rating: {moduleResults.materialRating}</p>*/}
+            {/*        <p>Feedback: {moduleResults.materialFeedback}</p>*/}
+            {/*        <p>{moduleResults.lecturerQuestion}</p>*/}
+            {/*        <p>Rating: {moduleResults.lecturerRating}</p>*/}
+            {/*        <p>Feedback: {moduleResults.lecturerFeedback}</p>*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*)}*/}
+            {/*{moduleResults && (*/}
+            {/*    <div>*/}
+            {/*        <h3>Results for {selectedModule.label}:</h3>*/}
+            {/*        {Array.isArray(moduleResults) ? moduleResults.map((result, index) => (*/}
+            {/*            <div key={index}>*/}
+            {/*                <h4>{result.moduleName}</h4>*/}
+            {/*                <p>{result.materialQuestion}</p>*/}
+            {/*                <p>Material Rating: {result.materialRating}</p>*/}
+            {/*                <p>Material Feedback: {result.materialFeedback}</p>*/}
+            {/*                <p>{result.lecturerQuestion}</p>*/}
+            {/*                <p>Lecturer Rating: {result.lecturerRating}</p>*/}
+            {/*                <p>Lecturer Feedback: {result.lecturerFeedback}</p>*/}
+            {/*            </div>*/}
+            {/*        )) : (*/}
+            {/*            <div>*/}
+            {/*                <h4>{moduleResults.moduleName}</h4>*/}
+            {/*                <p>{moduleResults.materialQuestion}</p>*/}
+            {/*                <p>Material Rating: {moduleResults.materialRating}</p>*/}
+            {/*                <p>Material Feedback: {moduleResults.materialFeedback}</p>*/}
+            {/*                <p>{moduleResults.lecturerQuestion}</p>*/}
+            {/*                <p>Lecturer Rating: {moduleResults.lecturerRating}</p>*/}
+            {/*                <p>Lecturer Feedback: {moduleResults.lecturerFeedback}</p>*/}
+            {/*            </div>*/}
+            {/*        )}*/}
+            {/*    </div>*/}
+            {/*)}*/}
+
+// useEffect(() => {
+//     // async function fetchSurvey(){
+//     //   const response = await fetch('http://127.0.0.1:8000/api/');
+//     //   response.json()
+//     //       .then(response => setSurvey(response.response))
+//     //       .catch(err => setErrors(err));
+//     // }
+//     // fetchSurvey();
+//     setSurvey([
+//         {
+//             "id": 1,
+//             "module": "Module 1",
+//             "questions": [
+//                 {
+//                     "question": "Question 1",
+//                     "answers": ["Answer 1", "Answer 2", "Answer 3"]
+//                 },
+//                 {
+//                     "question": "Question 2",
+//                     "answers": ["Answer 1", "Answer 2", "Answer 3"]
+//                 }
+//             ]
+//         },
+//         {
+//             "id": 2,
+//             "module": "Team Project",
+//             "questions": [
+//                 {
+//                     "question": "Question 1",
+//                     "answers": ["Answer 1", "Answer 2", "Answer 3"]
+//                 },
+//                 {
+//                     "question": "Question 2",
+//                     "answers": ["Answer 1", "Answer 2", "Answer 3"]
+//                 }
+//             ]
+//         }
+//     ])
+// }, [])
+
+
+// const getSurvey = async () => {
+//   const response = await fetch('http://127.0.0.1:8000/api/')
+//   const data = response.json()
+// }
+//
+// return (
+//       <div>
+//           <h2>feedback:</h2>
+//           {surveyList.map((feedback, index) => {
+//               return (
+//                   <div className="feedback-item" key={index}>
+//                     <Select options={[{ value: feedback.module, label: feedback.module }]} />
+//                       <p>{feedback.module}</p>
+//                   </div>
+//               );
+//           })}
+//       </div>
+//   );
+
 // const SurveyList = ({ surveys, isLoading, setSurvey }) => {
 //
 //   const [editText, setEditText] = useState({
