@@ -8,12 +8,17 @@ from . import serializers
 
 
 # Create your views here.
-
-class FeedbackList(generics.ListAPIView):
+class ModuleList(generics.ListAPIView):
     queryset = models.Feedback.objects.all()
     serializer_class = serializers.FeedbackSerializer
+class FeedbackList(generics.ListAPIView):
+    serializer_class = serializers.FeedbackSerializer
 
-class Feedback(generics.RetrieveUpdateAPIView):
+    def get_queryset(self):
+        moduleName = self.kwargs['moduleName']
+        return models.Feedback.objects.filter(moduleName=moduleName)
+
+class Feedback(generics.CreateAPIView):
     queryset = models.Feedback.objects.all()
     serializer_class = serializers.FeedbackSerializer
     # lookup_field =

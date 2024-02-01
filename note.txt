@@ -20,6 +20,8 @@ python manage.py runserver
 frontend:
 npm start
 
+sudo su reboot
+
 ssh -i "myOracleCloudKey" ubuntu@152.67.138.38
 
 docker:
@@ -28,6 +30,7 @@ docker-compose down
 docker-compose logs -f
 docker-compose ls
 docker image:  docker run -dp 127.0.0.1:3000:8000 backend:hi
+docker-compose -f docker-compose.yml logs
 
 sudo nano /etc/nginx/sites-available/default
 sudo service nginx restart

@@ -3,8 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.FeedbackList.as_view(), name='feedbackList'),
-    path('feedback/<int:pk>', views.Feedback.as_view(), name='feedback'),
+    path('', views.ModuleList.as_view(), name='moduleList'),
+    path('newfeedback/', views.Feedback.as_view(), name='feedback'),
+path('<str:moduleName>/', views.FeedbackList.as_view(), name='feedbackList'),
     # # path('<str:module>/', views.SurveyList.as_view(), name='feedback'),
     # path('<int:pk>/', views.Survey.as_view(), name='feedback'),
     # path('question/', views.QuestionList.as_view(), name='questions'),
