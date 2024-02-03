@@ -9,11 +9,14 @@ class Student(models.Model):
 class AcademicYear(models.Model):
     year = models.CharField(max_length=15)
 
+class Module(models.Model):
+    code = models.CharField(max_length=8)
+    title = models.CharField(max_length=50)
 
 class Feedback(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     academicYear = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
-    moduleName = models.CharField(max_length=50)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
     materialQuestion = models.CharField(max_length=200)
     lecturerQuestion = models.CharField(max_length=200)
     materialRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
@@ -46,7 +49,7 @@ class Feedback(models.Model):
 #         return self.module
 #
 # class Question(models.Model):
-#     # feedback = models.ManyToManyField(SurveyForm, through=SurveyQuestion)
+#     # feedback = models.ManyToManyField(FeedbackForm, through=SurveyQuestion)
 #     text = models.CharField(max_length=200)
 #     pub_date = models.DateTimeField(auto_now_add=True)
 #
@@ -73,7 +76,7 @@ class Feedback(models.Model):
 #         return self.feedback
 
 # class Submission(models.Model):
-#     feedback = models.ForeignKey(SurveyForm, on_delete=models.PROTECT)
+#     feedback = models.ForeignKey(FeedbackForm, on_delete=models.PROTECT)
 #     #participant_email = models.EmailField(max_length=255)
 #     answer = models.ManyToManyField(Choice)
 #     #status = models.CharField(max_length=255)x

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Student, AcademicYear, Feedback
+from .models import Student, AcademicYear, Feedback, Module
 
 
 # class WebUserSerializer(serializers.ModelSerializer):
@@ -18,26 +18,26 @@ class AcademicYearSerializer(serializers.ModelSerializer):
         model = AcademicYear
         fields = ['id', 'year']
 
-class ModuleNameSerializer(serializers.ModelSerializer):
+class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Feedback
-        fields = ['moduleName']
+        model = Module
+        fields = ['id', 'code', 'title']
 
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'moduleName', 'materialQuestion', 'materialRating', 'materialFeedback']
+        fields = ['academicYear', 'module', 'materialQuestion', 'materialRating', 'materialFeedback']
 
 class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'moduleName', 'materialQuestion', 'lecturerQuestion',
+        fields = ['academicYear', 'module', 'materialQuestion', 'lecturerQuestion',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['id', 'student', 'academicYear', 'moduleName', 'materialQuestion', 'lecturerQuestion',
+        fields = ['id', 'student', 'academicYear', 'moduleTitle', 'materialQuestion', 'lecturerQuestion',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 # class SurveySerializer(serializers.ModelSerializer):

@@ -1,11 +1,11 @@
 from rest_framework import generics
 from . import models
-from .serializers import StudentSerializer, AcademicYearSerializer, AnonymousFeedbackSerializer, AuthenticatedFeedbackSerializer, FeedbackSerializer
+from .serializers import StudentSerializer, AcademicYearSerializer, ModuleSerializer, AnonymousFeedbackSerializer, AuthenticatedFeedbackSerializer, FeedbackSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 
 class ModuleList(generics.ListAPIView):
-    queryset = models.Feedback.objects.all()
-    serializer_class = AnonymousFeedbackSerializer
+    queryset = models.Module.objects.all()
+    serializer_class = ModuleSerializer
 class FeedbackList(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = models.Feedback.objects.all()
@@ -16,10 +16,10 @@ class FeedbackList(generics.ListAPIView):
         return AnonymousFeedbackSerializer
 
     def get_queryset(self):
-        moduleName = self.kwargs['moduleName']
-        return models.Feedback.objects.filter(moduleName=moduleName)
+        moduleCode = self.kwargs['moduleCode']
+        return models.Feedback.objects.filter(module__code=moduleCode)
 
-class Feedback(generics.CreateAPIView):
+class FeedbackForm(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, )
     queryset = models.Feedback.objects.all()
     serializer_class = FeedbackSerializer
@@ -50,17 +50,17 @@ Used for read-write-delete endpoints to represent a single model instance.
 
 # @api_view(['GET'])
 # def index(request):
-#     #survey_list = models.SurveyForm.objects.order_by('module')
+#     #survey_list = models.FeedbackForm.objects.order_by('module')
 #     #output = ', '.join([q.module for q in survey_list])
 #     #return HttpResponse(output)
-#     module_list = models.SurveyForm.objects.all()
+#     module_list = models.FeedbackForm.objects.all()
 #     #output = '\n'.join([q.module for q in module_list])
 #     serializer = serializers.SurveySerializer(module_list, many=True)
 #     return Response(serializer.data)
 #
 # #@api_view(['GET'])
 # def feedback(request, module_wanted):
-#     module_name = models.SurveyForm.objects.get(module=module_wanted)
+#     module_name = models.FeedbackForm.objects.get(module=module_wanted)
 #     serializer = serializers.SurveySerializer(module_name, many=False)
 #     return Response(serializer.data)
 #

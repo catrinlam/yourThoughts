@@ -15,8 +15,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import SurveyList from "./SurveyList";
-import SurveyForm from "./SurveyForm";
+import FeedbackList from "./FeedbackList";
+import FeedbackForm from "./FeedbackForm";
 
 const Header = () => {
     return (
@@ -59,9 +59,9 @@ export default Header;
 //   return (
 //     // <Router>
 //     //   <Routes>
-//     //     <Route path="/" element={<SurveyList />} />
-//     //     <Route path="/feedback" element={<SurveyForm />} />
-//     //     {/*<Route path="/result" element={<SurveyList />} />*/}
+//     //     <Route path="/" element={<FeedbackList />} />
+//     //     <Route path="/feedback" element={<FeedbackForm />} />
+//     //     {/*<Route path="/result" element={<FeedbackList />} />*/}
 //     //   </Routes>
 //     // </Router>
 //     // <motion.div

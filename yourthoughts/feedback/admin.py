@@ -30,6 +30,7 @@ from . import models
 # admin.site.register(models.WebUser)
 admin.site.register(models.Student)
 admin.site.register(models.AcademicYear)
+admin.site.register(models.Module)
 admin.site.register(models.Feedback)
 
 # admin.site.register(models.Survey, SurveyAdmin)

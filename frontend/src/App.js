@@ -1,7 +1,7 @@
 import './App.css';
 import Header from "./components/Header";
-import SurveyForm from './components/SurveyForm';
-import SurveyList from "./components/SurveyList";
+import FeedbackForm from './components/FeedbackForm';
+import FeedbackList from "./components/FeedbackList";
 import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
@@ -12,8 +12,8 @@ function App() {
         <Router>
             <Header />
             <Routes>
-                <Route path="/" element={<SurveyList />} />
-                <Route path="/survey" element={<SurveyForm />} />
+                <Route path="/" element={<FeedbackList />} />
+                <Route path="/survey" element={<FeedbackForm />} />
             </Routes>
         </Router>
     );
@@ -59,7 +59,7 @@ export default App;
 //     <div>
 //       <button onClick={toggleSidebar}>Toggle Sidebar</button>
 //       {isSidebarOpen && <Header />}
-//       <SurveyList />
+//       <FeedbackList />
 //     </div>
 //   );
 // };
@@ -68,7 +68,7 @@ export default App;
 //       return (
 //                 <div className="App">
 //                     <Header />
-//                   <SurveyList />
+//                   <FeedbackList />
 //                 </div>
 //             );
 // const [surveyList, setSurvey] = useState([])
@@ -104,14 +104,14 @@ export default App;
 //         <header className="App-header">
 //             <h1>YourTHOUGHTS</h1>
 //         </header>
-//         <div className="SurveyList">
+//         <div className="FeedbackList">
 //             <h2>List</h2>
 //             <div className="Survey">
 //                 <h2>Module</h2>
 //             </div>
 //         </div>
-//         <SurveyList />
-//         {/*<SurveyForm />*/}
+//         <FeedbackList />
+//         {/*<FeedbackForm />*/}
 //     </div>
 // );
 // }

@@ -4,28 +4,28 @@ import Select from 'react-select'
 
 // import { MdOutlineDeleteOutline, MdEditNote, MdOutlineCheckBox, MdOutlineCheckBoxOutlineBlank } from 'react-icons/md'
 
-function SurveyList() {
-    const [surveyList, setSurvey] = useState([])
+function FeedbackList() {
+    const [feedbackList, setFeedback] = useState([])
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);
 
     useEffect(() => {
         const fetchModules = async () => {
-            const response = await axios.get('http://127.0.0.1:8000/api/');
-            setSurvey(response.data);
+            const response = await axios.get('http://127.0.0.1:8000/api/modules/');
+            setFeedback(response.data);
         };
 
         fetchModules();
     }, []);
 
-    const uniqueModules = Array.from(new Set(surveyList.map(survey => survey.moduleName)));
+    const uniqueModules = Array.from(new Set(feedbackList.map(survey => survey.moduleName)));
     const options = uniqueModules.map(moduleName => {
-        const correspondingSurvey = surveyList.find(survey => survey.moduleName === moduleName);
+        const correspondingSurvey = feedbackList.find(survey => survey.moduleName === moduleName);
         return {value: correspondingSurvey.id, label: moduleName};
     });
 
 
-    // const options = surveyList.map(survey => ({value: survey.id, label: survey.module}));
+    // const options = feedbackList.map(survey => ({value: survey.id, label: survey.module}));
 
     const handleChange = async selectedOption => {
         setSelectedModule(selectedOption);
@@ -84,7 +84,7 @@ function SurveyList() {
 
 }
 
-export default SurveyList;
+export default FeedbackList;
 
 // {moduleResults.map((result, index) => (
 //                             <p key={index}>Rating: {result.lecturerRating}</p>
@@ -102,7 +102,7 @@ export default SurveyList;
     //     setModuleResults(response.data);
     // };
 
-{/*<Select options={surveyList.map(survey => ({value: survey.id, label: survey.moduleName}))} onChange={handleChange}/>*/}
+{/*<Select options={feedbackList.map(survey => ({value: survey.id, label: survey.moduleName}))} onChange={handleChange}/>*/}
             {/*<Select options={options} onChange={handleChange}/>*/}
             {/*<p>Selected Module: {selectedModule ? selectedModule.label : 'None'}</p>*/}
             {/*{moduleResults && (*/}
@@ -150,11 +150,11 @@ export default SurveyList;
 //     // async function fetchSurvey(){
 //     //   const response = await fetch('http://127.0.0.1:8000/api/');
 //     //   response.json()
-//     //       .then(response => setSurvey(response.response))
+//     //       .then(response => setFeedback(response.response))
 //     //       .catch(err => setErrors(err));
 //     // }
 //     // fetchSurvey();
-//     setSurvey([
+//     setFeedback([
 //         {
 //             "id": 1,
 //             "module": "Module 1",
@@ -195,7 +195,7 @@ export default SurveyList;
 // return (
 //       <div>
 //           <h2>feedback:</h2>
-//           {surveyList.map((feedback, index) => {
+//           {feedbackList.map((feedback, index) => {
 //               return (
 //                   <div className="feedback-item" key={index}>
 //                     <Select options={[{ value: feedback.module, label: feedback.module }]} />
@@ -206,7 +206,7 @@ export default SurveyList;
 //       </div>
 //   );
 
-// const SurveyList = ({ surveys, isLoading, setSurvey }) => {
+// const FeedbackList = ({ surveys, isLoading, setFeedback }) => {
 //
 //   const [editText, setEditText] = useState({
 //     'module': ''
@@ -314,4 +314,4 @@ export default SurveyList;
 //   )
 // }
 //
-// export default SurveyList;
+// export default FeedbackList;
