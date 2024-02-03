@@ -10,4 +10,4 @@ pytest-django==4.7.0
 pytz==2023.3.post1
 sqlparse==0.4.4
 psycopg
-psycopg2
+#psycopg2
