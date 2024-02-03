@@ -1,26 +1,9 @@
 from django.db import models
-from django.utils import timezone
-from django.core.validators import MaxValueValidator, validate_email
-
-
-# Create your models here.
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Student(models.Model):
-    # id = models.AutoField(primary_key=True)
-    email = models.EmailField(validators=[validate_email])
-    # username = models.CharField(max_length=255)
-    # firstName = models.CharField(max_length=255)
-    # lastName = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-
-
-# class Admin(WebUser):
-#     username = models.CharField(max_length=255)
-
-
-# class Student(models.Model):
-#     # id = models.AutoField(primary_key=True)
-#     module = models.CharField(max_length=255)
+    student = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class AcademicYear(models.Model):
@@ -30,16 +13,30 @@ class AcademicYear(models.Model):
 class Feedback(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     academicYear = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
-    # feedbackId = models.IntegerField()
     moduleName = models.CharField(max_length=50)
     materialQuestion = models.CharField(max_length=200)
     lecturerQuestion = models.CharField(max_length=200)
-    # questions_questionId = models.IntegerField()
-    materialRating = models.FloatField(default=0, validators=[MaxValueValidator(5)])
+    materialRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     materialFeedback = models.CharField(max_length=500, null=True, blank=True)
-    lecturerRating = models.FloatField(default=0, validators=[MaxValueValidator(5)])
+    lecturerRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     lecturerFeedback = models.CharField(max_length=500, null=True, blank=True)
     submitDate = models.DateTimeField(auto_now_add=True)
+
+    # questions_questionId = models.IntegerField()
+    # feedbackId = models.IntegerField()
+
+    # id = models.AutoField(primary_key=True)
+
+    # username = models.CharField(max_length=255)
+    # firstName = models.CharField(max_length=255)
+    # lastName = models.CharField(max_length=255)
+
+    # class Admin(WebUser):
+    #     username = models.CharField(max_length=255)
+
+    # class Student(models.Model):
+    #     # id = models.AutoField(primary_key=True)
+    #     module = models.CharField(max_length=255)
 
 # class Survey(models.Model):
 #     module = models.CharField(max_length=20)

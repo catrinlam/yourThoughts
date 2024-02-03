@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . import models
+from .models import Student, AcademicYear, Feedback
 
 
 # class WebUserSerializer(serializers.ModelSerializer):
@@ -9,19 +9,34 @@ from . import models
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Student
+        model = Student
         fields = ['id', 'email', 'password']
 
 
 class AcademicYearSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.AcademicYear
+        model = AcademicYear
         fields = ['id', 'year']
 
+class ModuleNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['moduleName']
+
+class AnonymousFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['academicYear', 'moduleName', 'materialQuestion', 'materialRating', 'materialFeedback']
+
+class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['academicYear', 'moduleName', 'materialQuestion', 'lecturerQuestion',
+                  'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Feedback
+        model = Feedback
         fields = ['id', 'student', 'academicYear', 'moduleName', 'materialQuestion', 'lecturerQuestion',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 

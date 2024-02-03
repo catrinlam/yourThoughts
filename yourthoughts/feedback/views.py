@@ -1,43 +1,29 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework.decorators import api_view
 from . import models
-from . import serializers
+from .serializers import StudentSerializer, AcademicYearSerializer, AnonymousFeedbackSerializer, AuthenticatedFeedbackSerializer, FeedbackSerializer
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 
-
-# Create your views here.
 class ModuleList(generics.ListAPIView):
     queryset = models.Feedback.objects.all()
-    serializer_class = serializers.FeedbackSerializer
+    serializer_class = AnonymousFeedbackSerializer
 class FeedbackList(generics.ListAPIView):
-    serializer_class = serializers.FeedbackSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = models.Feedback.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.user.is_authenticated:
+            return AuthenticatedFeedbackSerializer
+        return AnonymousFeedbackSerializer
 
     def get_queryset(self):
         moduleName = self.kwargs['moduleName']
         return models.Feedback.objects.filter(moduleName=moduleName)
 
 class Feedback(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated, )
     queryset = models.Feedback.objects.all()
-    serializer_class = serializers.FeedbackSerializer
+    serializer_class = FeedbackSerializer
     # lookup_field =
-
-# class SurveyList(generics.ListCreateAPIView):
-#     queryset = models.Survey.objects.all()
-#     serializer_class = serializers.SurveySerializer
-#
-# class Survey(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = models.Survey.objects.all()
-#     serializer_class = serializers.SurveySerializer
-#
-# class QuestionList(generics.ListCreateAPIView):
-#     queryset = models.Question.objects.all()
-#     serializer_class = serializers.QuestionSerializer
-#
-# class SubmissionList(generics.ListCreateAPIView):
-#     queryset = models.Submission.objects.all()
-#     serializer_class = serializers.SubmissionSerializer
 
 
 """ Concrete View Classes

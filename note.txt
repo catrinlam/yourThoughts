@@ -2,6 +2,10 @@ Admin: admin
 admin@email.com
 PasswordSuper
 
+User: user
+user@email.com
+Testuser
+
 Question.objects.all() #list all questions
 q = Question(question_text="How would you rate this module?")
 >>> q.save() #set question and save
@@ -17,6 +21,10 @@ python manage.py migrate
 
 python manage.py runserver
 
+./manage.py test
+
+coverage run manage.py test
+
 frontend:
 npm start
 
@@ -31,6 +39,8 @@ docker-compose logs -f
 docker-compose ls
 docker image:  docker run -dp 127.0.0.1:3000:8000 backend:hi
 docker-compose -f docker-compose.yml logs
+
+sudo docker-compose -f docker-compose.yml logs
 
 sudo nano /etc/nginx/sites-available/default
 sudo service nginx restart
