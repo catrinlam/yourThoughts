@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'feedback.apps.SurveyConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     "corsheaders",
+    "djoser",
+    'feedback.apps.FeedbackConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [

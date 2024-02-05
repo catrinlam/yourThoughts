@@ -18,18 +18,21 @@ function FeedbackList() {
         fetchModules();
     }, []);
 
-    const uniqueModules = Array.from(new Set(feedbackList.map(survey => survey.moduleName)));
-    const options = uniqueModules.map(moduleName => {
-        const correspondingSurvey = feedbackList.find(survey => survey.moduleName === moduleName);
-        return {value: correspondingSurvey.id, label: moduleName};
-    });
+     const options = feedbackList.map(module => ({value: module.code, label: module.title}));
+
+
+    // const uniqueModules = Array.from(new Set(feedbackList.map(survey => survey.moduleTitle)));
+    // const options = uniqueModules.map(moduleTitle => {
+    //     const correspondingSurvey = feedbackList.find(survey => survey.moduleTitle === moduleTitle);
+    //     return {value: correspondingSurvey.id, label: moduleCode};
+    // });
 
 
     // const options = feedbackList.map(survey => ({value: survey.id, label: survey.module}));
 
     const handleChange = async selectedOption => {
         setSelectedModule(selectedOption);
-        const response = await axios.get(`http://127.0.0.1:8000/api/${selectedOption.label}`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/${selectedOption.value}`);
         console.log(response.data);
         setModuleResults(response.data);
     };
@@ -102,14 +105,14 @@ export default FeedbackList;
     //     setModuleResults(response.data);
     // };
 
-{/*<Select options={feedbackList.map(survey => ({value: survey.id, label: survey.moduleName}))} onChange={handleChange}/>*/}
+{/*<Select options={feedbackList.map(survey => ({value: survey.id, label: survey.moduleTitle}))} onChange={handleChange}/>*/}
             {/*<Select options={options} onChange={handleChange}/>*/}
             {/*<p>Selected Module: {selectedModule ? selectedModule.label : 'None'}</p>*/}
             {/*{moduleResults && (*/}
             {/*    <div>*/}
             {/*      <h3>Results for {selectedModule.label}:</h3>*/}
             {/*      <div>*/}
-            {/*        <h4>{moduleResults.moduleName}</h4>*/}
+            {/*        <h4>{moduleResults.moduleTitle}</h4>*/}
             {/*        <p>{moduleResults.materialQuestion}</p>*/}
             {/*        <p>Rating: {moduleResults.materialRating}</p>*/}
             {/*        <p>Feedback: {moduleResults.materialFeedback}</p>*/}
@@ -124,7 +127,7 @@ export default FeedbackList;
             {/*        <h3>Results for {selectedModule.label}:</h3>*/}
             {/*        {Array.isArray(moduleResults) ? moduleResults.map((result, index) => (*/}
             {/*            <div key={index}>*/}
-            {/*                <h4>{result.moduleName}</h4>*/}
+            {/*                <h4>{result.moduleTitle}</h4>*/}
             {/*                <p>{result.materialQuestion}</p>*/}
             {/*                <p>Material Rating: {result.materialRating}</p>*/}
             {/*                <p>Material Feedback: {result.materialFeedback}</p>*/}
@@ -134,7 +137,7 @@ export default FeedbackList;
             {/*            </div>*/}
             {/*        )) : (*/}
             {/*            <div>*/}
-            {/*                <h4>{moduleResults.moduleName}</h4>*/}
+            {/*                <h4>{moduleResults.moduleTitle}</h4>*/}
             {/*                <p>{moduleResults.materialQuestion}</p>*/}
             {/*                <p>Material Rating: {moduleResults.materialRating}</p>*/}
             {/*                <p>Material Feedback: {moduleResults.materialFeedback}</p>*/}

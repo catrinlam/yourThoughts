@@ -1,16 +1,30 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Student, AcademicYear, Feedback, Module
 
 
-# class WebUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.WebUser
-#         fields = ['id', 'email', 'password']
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
 
 class StudentSerializer(serializers.ModelSerializer):
+    student = UserSerializer()
+
     class Meta:
         model = Student
-        fields = ['id', 'email', 'password']
+        fields = ['id', 'student']
+
+    def create(self, validated_data):
+        student_data = validated_data.pop('student')
+        student = User.objects.create(**student_data)
+        return Student.objects.create(student=student, **validated_data)
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
 
 class AcademicYearSerializer(serializers.ModelSerializer):
@@ -18,27 +32,53 @@ class AcademicYearSerializer(serializers.ModelSerializer):
         model = AcademicYear
         fields = ['id', 'year']
 
+
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = ['id', 'code', 'title']
 
+
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'module', 'materialQuestion', 'materialRating', 'materialFeedback']
+        fields = ['academicYear', 'module', 'materialRating', 'materialFeedback']
+
 
 class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'module', 'materialQuestion', 'lecturerQuestion',
+        fields = ['academicYear', 'module',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['id', 'student', 'academicYear', 'moduleTitle', 'materialQuestion', 'lecturerQuestion',
+        fields = ['id', 'student', 'academicYear', 'module',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+
+# class WebUserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.WebUser
+#         fields = ['id', 'email', 'password']
+
+# class StudentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Student
+#         fields = ['id', 'email', 'password']
+
+# class StudentSerializer(serializers.ModelSerializer):
+#     user = UserSerializer()
+#
+#     class Meta:
+#         model = Student
+#         fields = ['id', 'user']
+#
+#     def create(self, validated_data):
+#         user_data = validated_data.pop('user')
+#         user = User.objects.create(**user_data)
+#         student = Student.objects.create(user=user, **validated_data)
+#         return student
 
 # class SurveySerializer(serializers.ModelSerializer):
 #     class Meta:

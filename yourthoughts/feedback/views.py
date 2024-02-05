@@ -7,7 +7,7 @@ class ModuleList(generics.ListAPIView):
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
 class FeedbackList(generics.ListAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = models.Feedback.objects.all()
 
     def get_serializer_class(self):
@@ -20,7 +20,7 @@ class FeedbackList(generics.ListAPIView):
         return models.Feedback.objects.filter(module__code=moduleCode)
 
 class FeedbackForm(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
     queryset = models.Feedback.objects.all()
     serializer_class = FeedbackSerializer
     # lookup_field =

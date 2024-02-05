@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from .models import Student, Feedback, AcademicYear
+from .models import Student, Feedback, AcademicYear, Module
 
 class StudentTestCase(TestCase):
     def setUp(self):
@@ -23,24 +23,31 @@ class AcademicYearModelTestCase(TestCase):
     def test_academic_year_year(self):
         self.assertEqual(self.academic_year.year, '2022-2023')
 
+class ModuleModelTestCase(TestCase):
+    def setUp(self):
+        self.module = Module.objects.create(code="TEST1234", title="Test Module")
+
+    def test_module_code(self):
+        self.assertEqual(self.module.code, "TEST1234")
+
+    def test_module_title(self):
+        self.assertEqual(self.module.title, "Test Module")
 
 class FeedbackModelTestCase(TestCase):
     def setUp(self):
         student = User.objects.create_user(username="student", email="student@email.com", password="password")
         self.student = Student.objects.create(student=student)
         self.academic_year = AcademicYear.objects.create(year="2022-2023")
+        self.module = Module.objects.create(code="TEST1234", title="Test Module")
         self.feedback = Feedback.objects.create(
             student=self.student,
             academicYear=self.academic_year,
-            moduleName="Test Module",
+            module=self.module,
             materialQuestion="How is the material?",
             lecturerQuestion="How is the lecturer?",
             materialRating=4.5,
             lecturerRating=4.0,
         )
-
-    def test_feedback_module_name(self):
-        self.assertEqual(self.feedback.moduleName, "Test Module")
 
     def test_feedback_material_rating(self):
         self.assertEqual(self.feedback.materialRating, 4.5)
@@ -90,10 +97,11 @@ class ViewTestCase(TestCase):
         self.student = Student.objects.create(student=student)
         self.client.force_authenticate(user=student)
         self.academic_year = AcademicYear.objects.create(year="2022-2023")
+        self.module = Module.objects.create(code="TEST1234", title="Test Module")
         Feedback.objects.create(
             student=self.student,
             academicYear=self.academic_year,
-            moduleName="Test Module",
+            module=self.module,
             materialQuestion="How is the material?",
             lecturerQuestion="How is the lecturer?",
             materialRating=4.5,
@@ -111,7 +119,7 @@ class ViewTestCase(TestCase):
         Feedback.objects.create(
             student=self.student,
             academicYear=self.academic_year,
-            moduleName="Testing Module",
+            module=self.module,
             materialQuestion="How is the material?",
             lecturerQuestion="How is the lecturer?",
             materialRating=4.5,
@@ -119,22 +127,22 @@ class ViewTestCase(TestCase):
             materialFeedback="material is Good",
             lecturerFeedback="feedback is Good"
         )
-        response = self.client.get(reverse('feedbackList', kwargs={'moduleName': 'Testing Module'}))
+        response = self.client.get(reverse('feedbackList', kwargs={'moduleCode': self.module.code}))
         self.assertEqual(response.status_code, 200)
         for feedback in response.data:
             self.assertTrue('lecturerRating' not in feedback)
             self.assertTrue('lecturerFeedback' not in feedback)
 
     def test_feedback_list(self):
-        response = self.client.get(reverse('feedbackList', kwargs={'moduleName': 'Test Module'}))
+        response = self.client.get(reverse('feedbackList', kwargs={'moduleCode': self.module.code}))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), Feedback.objects.filter(moduleName='Test Module').count())
+        self.assertEqual(len(response.data), Feedback.objects.filter(module=self.module).count())
 
     def test_feedback_create(self):
         data = {
             "student": self.student.id,
             "academicYear": self.academic_year.id,
-            "moduleName": "Test Module",
+            "module": self.module.id,
             "materialQuestion": "How is the material?",
             "lecturerQuestion": "How is the lecturer?",
             "materialRating": 4.5,

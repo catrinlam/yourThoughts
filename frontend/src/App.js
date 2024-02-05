@@ -2,10 +2,12 @@ import './App.css';
 import Header from "./components/Header";
 import FeedbackForm from './components/FeedbackForm';
 import FeedbackList from "./components/FeedbackList";
+import Login from "./components/Login";
 import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Home } from '@mui/icons-material';
+
 
 function App() {
     return (
@@ -13,7 +15,8 @@ function App() {
             <Header />
             <Routes>
                 <Route path="/" element={<FeedbackList />} />
-                <Route path="/survey" element={<FeedbackForm />} />
+                <Route path="/feedback" element={<FeedbackForm />} />
+                {/*<Route path="/log-in" element={<Login />} />*/}
             </Routes>
         </Router>
     );
