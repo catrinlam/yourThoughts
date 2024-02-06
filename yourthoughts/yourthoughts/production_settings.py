@@ -103,7 +103,7 @@ WSGI_APPLICATION = 'yourthoughts.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": "default_database",
+        "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "db",  # set in docker-compose.yml

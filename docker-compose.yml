@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: postgres # The PostgreSQL user (useful to connect to the database)
       POSTGRES_PASSWORD: postgres # The PostgreSQL password (useful to connect to the database)
-      POSTGRES_DB: default_database # The PostgreSQL default database (automatically created at first launch)
+      POSTGRES_DB: postgres # The PostgreSQL default database (automatically created at first launch)
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - /home/ubuntu/db:/var/lib/postgresql/data
