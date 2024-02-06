@@ -45,5 +45,6 @@ jobs:
           cd ${{ secrets.DEPLOY_DIR }}
           sudo docker-compose down
           sudo docker-compose up --build -d
+          cd yourthoughts
           ./manage.py makemigrations
           ./manage.py migrate
