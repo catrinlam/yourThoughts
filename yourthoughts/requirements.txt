@@ -27,4 +27,4 @@ social-auth-app-django==5.4.0
 social-auth-core==4.5.2
 sqlparse==0.4.4
 urllib3==2.2.0
-psycopg
+psycopg==2.9.1
