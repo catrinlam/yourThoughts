@@ -1,7 +1,8 @@
 #!/bin/bash
 
+chmod +x wait-for-it.sh
 # Wait for the database to be ready
-python manage.py wait_for_db
+./wait-for-it.sh db:5432 --timeout=30 -- echo "Database is up"
 
 # Apply database migrations
 python manage.py makemigrations --settings=yourthoughts.production_settings
