@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from yourthoughts.feedback.models import Feedback
+from feedback.models import Student, Module, AcademicYear, Feedback
 
 
 class Command(BaseCommand):
@@ -11,7 +11,7 @@ class Command(BaseCommand):
         if not User.objects.exists() and not Feedback.objects.exists():
             # Delete the superuser
             User.objects.filter(is_superuser=True).delete()
-            models_to_clear = [Student, Module, AcademicYear, Feedback,]
+            models_to_clear = [Student, Module, AcademicYear, Feedback]
             for model in models_to_clear:
                 model.objects.all().delete()
             self.stdout.write(self.style.SUCCESS('Successfully deleted data'))
