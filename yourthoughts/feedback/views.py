@@ -1,13 +1,13 @@
 from rest_framework import generics
 from . import models
 from .serializers import StudentSerializer, AcademicYearSerializer, ModuleSerializer, AnonymousFeedbackSerializer, AuthenticatedFeedbackSerializer, FeedbackSerializer
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 
-class ModuleList(generics.ListAPIView):
+class ModuleList(generics.ListCreateAPIView):
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
 class FeedbackList(generics.ListAPIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = models.Feedback.objects.all()
 
     def get_serializer_class(self):
@@ -20,11 +20,9 @@ class FeedbackList(generics.ListAPIView):
         return models.Feedback.objects.filter(module__code=moduleCode)
 
 class FeedbackForm(generics.CreateAPIView):
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = [IsAuthenticated]
     queryset = models.Feedback.objects.all()
     serializer_class = FeedbackSerializer
-    # lookup_field =
-
 
 """ Concrete View Classes
 #CreateAPIView

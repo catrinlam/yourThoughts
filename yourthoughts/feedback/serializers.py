@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Student, AcademicYear, Feedback, Module
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,21 +12,35 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    student = UserSerializer()
+    user = UserSerializer()
 
+    class Meta:
+        model = Student
+        fields = ['id', 'user']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = User.objects.create_user(**user_data)
+        return Student.objects.create(user=user, **validated_data)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    student = UserSerializer(many=False)
     class Meta:
         model = Student
         fields = ['id', 'student']
 
-    def create(self, validated_data):
-        student_data = validated_data.pop('student')
-        student = User.objects.create(**student_data)
-        return Student.objects.create(student=student, **validated_data)
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
 
-
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
+        try:
+            student = Student.objects.get(user=user)
+            token['studentId'] = student.id
+        except Student.DoesNotExist:
+            pass
+        return token
 
 
 class AcademicYearSerializer(serializers.ModelSerializer):
@@ -56,47 +72,3 @@ class FeedbackSerializer(serializers.ModelSerializer):
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
-
-# class WebUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.WebUser
-#         fields = ['id', 'email', 'password']
-
-# class StudentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Student
-#         fields = ['id', 'email', 'password']
-
-# class StudentSerializer(serializers.ModelSerializer):
-#     user = UserSerializer()
-#
-#     class Meta:
-#         model = Student
-#         fields = ['id', 'user']
-#
-#     def create(self, validated_data):
-#         user_data = validated_data.pop('user')
-#         user = User.objects.create(**user_data)
-#         student = Student.objects.create(user=user, **validated_data)
-#         return student
-
-# class SurveySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.Survey
-#         fields = ['id', 'module']
-#
-# class QuestionSerializer(serializers.ModelSerializer):
-#     feedback = serializers.StringRelatedField(many=True)
-#     class Meta:
-#         model = models.Question
-#         fields = ['id', 'feedback', 'text', 'pub_date']
-#
-# class SurveyQuestionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.SurveyQuestion
-#         fields = ['id', 'feedback', 'question']
-#
-# class SubmissionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.Submission
-#         fields = ['id', 'feedback', 'question', 'rating', 'feedback', 'submit_date']

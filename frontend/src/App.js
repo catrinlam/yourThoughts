@@ -3,22 +3,32 @@ import Header from "./components/Header";
 import FeedbackForm from './components/FeedbackForm';
 import FeedbackList from "./components/FeedbackList";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Home } from '@mui/icons-material';
+import PrivateRoute from './utils/PrivateRoute'
+
+import {AuthProvider} from './context/AuthContext'
+import {Sidebar, Menu, MenuItem} from 'react-pro-sidebar';
+import {Home} from '@mui/icons-material';
 
 
 function App() {
     return (
-        <Router>
-            <Header />
-            <Routes>
-                <Route path="/" element={<FeedbackList />} />
-                <Route path="/feedback" element={<FeedbackForm />} />
-                {/*<Route path="/log-in" element={<Login />} />*/}
-            </Routes>
-        </Router>
+        <div className="App">
+            <Router>
+                <AuthProvider>
+                    <Header/>
+                    <Routes>
+                        <Route path="/" element={<FeedbackList/>}/>
+                        <Route path="/feedback" element={<FeedbackForm/>}/>
+                        {/*<Route path="/feedback" element={<PrivateRoute><FeedbackForm/></PrivateRoute>}/>*/}
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/signup" element={<Signup/>}/>
+                    </Routes>
+                </AuthProvider>
+            </Router>
+        </div>
     );
 }
 

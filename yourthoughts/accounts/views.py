@@ -2,9 +2,15 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from feedback.serializers import StudentSerializer, LoginSerializer
+from feedback.serializers import StudentSerializer, MyTokenObtainPairSerializer
 from feedback.models import Student
 from django.contrib.auth import authenticate
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class ListUsers(generics.ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
 
 class SignUpView(generics.CreateAPIView):
     queryset = Student.objects.all()
@@ -12,59 +18,37 @@ class SignUpView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        student_data = serializer.validated_data['student']
-        if User.objects.filter(username=student_data['email']).exists():
+        user_data = serializer.validated_data['user']
+        if User.objects.filter(username=user_data['email']).exists():
             return Response({"detail": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             student = serializer.save()
-            Token.objects.create(user=student.student)
+            Token.objects.create(user=student.user)
 
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-    permission_classes = [permissions.AllowAny]
+class MyTokenObtainPairView(TokenObtainPairView):
+    permissions_classes = [permissions.AllowAny]
+    serializer_class = MyTokenObtainPairSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = authenticate(
-            request,
-            username=serializer.validated_data['email'],
-            password=serializer.validated_data['password']
-        )
-        if user is not None:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({
-                'token': token.key,
-                'user_id': user.pk,
-                'email': user.email
-            })
-        else:
-            return Response({"detail": "Invalid credentials"}, status=400)
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-# class SignUpView(generics.CreateAPIView):
-#     queryset = Student.objects.all()  # Changed from User to Student
-#     serializer_class = StudentSerializer
-#     permission_classes = [permissions.AllowAny]
+    def get(self, request):
+        student = Student.objects.get(student=request.user)
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+
+# class LogoutView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
 #
-#     def perform_create(self, serializer):
-#         student = serializer.save()
-#         Token.objects.create(user=student.student)
-
-# class LoginView(generics.GenericAPIView):
-#     serializer_class = StudentSerializer
-#     permission_classes = [permissions.AllowAny]
+#     def post(self, request):
 #
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data
-#         token, created = Token.objects.get_or_create(user=user)
-#         return Response({
-#             'token': token.key,
-#             'user_id': user.pk,
-#             'email': user.email
-#         })
-
+#         try:
+#             refresh_token = request.data["refresh_token"]
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response(status=status.HTTP_205_RESET_CONTENT)
+#         except Exception as e:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 """ Concrete View Classes
 #CreateAPIView

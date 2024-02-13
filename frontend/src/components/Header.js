@@ -1,45 +1,37 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import './Header.css';
 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-
-import {BrowserRouter as Router, Link, Route, Routes} from 'react-router-dom';
-// import { motion } from 'framer-motion';
-
-// import Link from 'next/link';
-// import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
-
-// importing material UI components
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-// import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import FeedbackList from "./FeedbackList";
-import FeedbackForm from "./FeedbackForm";
+import AuthContext from "../context/AuthContext";
 
 function Header() {
-  return (
-    <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
-      <Container>
-        <Navbar.Brand href="/">YourThoughts</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-          <Nav>
-            <Nav.Link href='/'>Results</Nav.Link>
-            <Nav.Link href="/feedback">Feedback</Nav.Link>
-            <Button variant="info" href="/sign-in">Sign in</Button>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
+    let {user, logoutUser} = useContext(AuthContext)
+    const loggedIn = localStorage.getItem('loggedIn');
+    const initialLoggedIn = loggedIn === 'true';
+    return (
+        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+            <Container>
+                <Navbar.Brand href="/">YourThoughts</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Nav>
+                        <Nav.Link href='/'>Results</Nav.Link>
+                        {initialLoggedIn && <Nav.Link href="/feedback">Feedback</Nav.Link>}
+                        {user ? (
+                            <Button onClick={logoutUser}>Logout</Button>
+                        ) : (
+                            <Button variant="info" href="/login">Log in</Button>
+                        )}
+                        {user && <Navbar.Text >Hello {user.username}!</Navbar.Text>}
+                        {/*<Button variant="info" href="/log-in">Log in</Button>*/}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+    );
 }
 
 export default Header;

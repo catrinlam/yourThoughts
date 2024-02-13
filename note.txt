@@ -2,8 +2,7 @@ Admin: admin
 admin@email.com
 PasswordSuper
 
-./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail
-.com
+./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail.com
 
 User: user
 user@email.com
