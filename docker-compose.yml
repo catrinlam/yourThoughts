@@ -23,12 +23,7 @@ services:
     ports:
       - "10000:8000"
     restart: 'always'
-    command: >
-      bash -c "python manage.py wait_for_db &&
-               python manage.py makemigrations --settings=yourthoughts.production_settings &&
-               python manage.py migrate --settings=yourthoughts.production_settings &&
-               python manage.py runserver 0.0.0.0:8000 --settings=yourthoughts.production_settings"
-      depends_on:
+    depends_on:
       - db
     logging:
       driver: "json-file"

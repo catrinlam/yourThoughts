@@ -43,7 +43,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.DEPLOY_DIR }}
-          sudo docker-compose down
+          sudo docker-compose down -v
           sudo docker-compose exec backend python manage.py shell -c "from django.apps import apps; for model in apps.get_models(): model.objects.all().delete()"
           # Delete all data in the database
           sudo docker-compose exec backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(is_superuser=True).delete()"
