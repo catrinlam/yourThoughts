@@ -17,3 +17,7 @@ npm-debug.log.*
 .git/
 /venv/
 /yourthoughts/htmlcov/
+/yourthoughts/.pytest_cache/
+/yourthoughts/.coverage
+/yourthoughts/.cache
+/yourthoughts/db.sqlite3
