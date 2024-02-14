@@ -4,7 +4,7 @@ PasswordSuper
 
 ./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail.com
 
-User: user
+User: student1
 user@email.com
 Testuser
 

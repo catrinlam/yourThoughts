@@ -4,7 +4,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator, validat
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # email = models.EmailField(max_length=255, validators=[validate_email], unique=True)
 
 class AcademicYear(models.Model):
     year = models.CharField(max_length=15)

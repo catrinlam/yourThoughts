@@ -4,13 +4,12 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from feedback.serializers import StudentSerializer, MyTokenObtainPairSerializer
 from feedback.models import Student
-from django.contrib.auth import authenticate
-from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 class ListUsers(generics.ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    permission_classes = [permissions.AllowAny]
 
 class SignUpView(generics.CreateAPIView):
     queryset = Student.objects.all()
@@ -19,36 +18,23 @@ class SignUpView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user_data = serializer.validated_data['user']
-        if User.objects.filter(username=user_data['email']).exists():
+        if User.objects.filter(email=user_data['email']).exists():
             return Response({"detail": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             student = serializer.save()
             Token.objects.create(user=student.user)
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    permissions_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     serializer_class = MyTokenObtainPairSerializer
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        student = Student.objects.get(student=request.user)
+        student = Student.objects.get(user=request.user)
         serializer = StudentSerializer(student)
         return Response(serializer.data)
-
-# class LogoutView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#
-#     def post(self, request):
-#
-#         try:
-#             refresh_token = request.data["refresh_token"]
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
-#             return Response(status=status.HTTP_205_RESET_CONTENT)
-#         except Exception as e:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 """ Concrete View Classes
 #CreateAPIView
