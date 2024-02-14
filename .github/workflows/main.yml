@@ -50,4 +50,5 @@ jobs:
           #sudo docker-compose exec backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(is_superuser=True).delete()"
           # Delete the superuser
           # sudo docker-compose exec backend python manage.py delete_all_data
-          #sudo docker-compose exec backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('secrets.ADMIN_USERNAME', 'secrets.ADMIN_EMAIL', 'secrets.ADMIN_PASSWORD')"
+          #create superuser
+          sudo docker-compose exec backend python manage.py  shell --settings=yourthoughts.production_settings -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${{ secrets.ADMIN_USERNAME }}', '${{ secrets.ADMIN_EMAIL }}', '${{ secrets.ADMIN_PASSWORD }}')"
