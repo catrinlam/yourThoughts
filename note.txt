@@ -4,6 +4,8 @@ PasswordSuper
 
 ./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail.com
 
+sudo docker exec -it yourthoughts-backend-1 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@email.com', 'PasswordSuper')" | python3 manage.py shell
+
 User: student1
 user@email.com
 Testuser
@@ -41,6 +43,8 @@ docker-compose logs -f
 docker-compose ls
 docker image:  docker run -dp 127.0.0.1:3000:8000 backend:hi
 docker-compose -f docker-compose.yml logs
+
+sudo docker system prune -a --volumes
 
 sudo docker-compose -f docker-compose.yml logs
 
