@@ -17,7 +17,8 @@ export const AuthProvider = ({children}) => {
         development: 'http://localhost:8000',
         staging: 'http://127.0.0.1:8000',
         production: 'http://127.0.0.1:10001',
-        deployment: 'http://localhost:10001'
+        deployment: 'http://localhost:10001',
+        domain: 'https://yourthoughts.me'
     };
 
     const environment = process.env.NODE_ENV || 'development';
