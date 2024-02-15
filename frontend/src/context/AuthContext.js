@@ -13,11 +13,23 @@ export const AuthProvider = ({children}) => {
     let [loading, setLoading] = useState(true)
 
     const navigate = useNavigate();
+    const baseURLs = {
+        development: 'http://localhost:8000',
+        staging: 'http://127.0.0.1:8000',
+        production: 'http://127.0.0.1:10001',
+        deployment: 'http://localhost:10001'
+    };
+
+    const environment = process.env.NODE_ENV || 'development';
+    const baseURL = baseURLs[environment];
+    const api = axios.create({
+        baseURL: baseURL
+    });
 
     let loginUser = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/accounts/token/', {
+            const response = await api.post('/api/accounts/token/', {
                 username: e.target.username.value,
                 password: e.target.password.value
             }, {
@@ -56,7 +68,7 @@ export const AuthProvider = ({children}) => {
 
     const updateToken = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/accounts/token/refresh/', {
+            const response = await api.post('/api/accounts/token/refresh/', {
                 refresh: authTokens?.refresh
             }, {
                 headers: {
