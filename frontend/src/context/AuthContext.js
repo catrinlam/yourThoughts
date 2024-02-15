@@ -16,8 +16,8 @@ export const AuthProvider = ({children}) => {
     const baseURLs = {
         development: 'http://localhost:8000',
         staging: 'http://127.0.0.1:8000',
-        production: 'http://127.0.0.1:10000',
-        deployment: 'http://localhost:10000',
+        // production: 'http://127.0.0.1:10000',
+        // deployment: 'http://localhost:10000',
         domain: 'https://yourthoughts.me'
     };
 
