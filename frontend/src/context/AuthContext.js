@@ -1,7 +1,7 @@
 import {createContext, useEffect, useState} from 'react';
-import axios from 'axios'; // Import axios
 import {jwtDecode} from 'jwt-decode'; // Use named import for jwtDecode
 import {useNavigate} from 'react-router-dom';
+import api from "../utils/api";
 
 const AuthContext = createContext();
 
@@ -13,19 +13,71 @@ export const AuthProvider = ({children}) => {
     let [loading, setLoading] = useState(true)
 
     const navigate = useNavigate();
-    const baseURLs = {
-        development: 'http://localhost:8000',
-        staging: 'http://127.0.0.1:8000',
-        // production: 'http://127.0.0.1:10000',
-        // deployment: 'http://localhost:10000',
-        domain: 'https://yourthoughts.me'
-    };
 
-    const environment = process.env.NODE_ENV || 'domain';
-    const baseURL = baseURLs[environment];
-    const api = axios.create({
-        baseURL: baseURL
-    });
+
+    // let signupUser = async (e) => {
+    //     e.preventDefault();
+    //     const username = e.target.username.value;
+    //     const email = e.target.email.value;
+    //     const password = e.target.password.value;
+    //
+    //     try {
+    //         const signupResponse = await api.post('/api/accounts/signup/', {
+    //             user: {
+    //                 username: username,
+    //                 email: email,
+    //                 password: password
+    //             }
+    //         });
+    //         if (signupResponse.data) {
+    //             // Assume signup was successful
+    //             console.log(signupResponse.data);
+    //
+    //             // Create a mock event object for the loginUser function
+    //             const fakeEvent = {
+    //                 preventDefault: () => {
+    //                 },
+    //                 target: {
+    //                     username: {value: username},
+    //                     password: {value: password}
+    //                 }
+    //             };
+    //             // Call loginUser with the mock event object
+    //             await loginUser(fakeEvent);
+    //         } else {
+    //             console.error('No data in response from signup');
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert('Signup failed. Please try again.');
+    //     }
+    // };
+    let signupUser = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.post('/api/accounts/signup/', {
+                user: {
+                    username: e.target.username.value,
+                    email: e.target.email.value,
+                    password: e.target.password.value
+                }
+            });
+            if (response.status === 201) {
+                console.log(response.data);
+                navigate('/');
+            } else {
+                console.error(response.data);
+                alert(`Error: ${response.data.detail}`);
+            }
+        } catch (error) {
+            console.error(error);
+            let errorMessage = 'An error occurred. Please try again.';
+            if (error.response && error.response.data && error.response.data.detail) {
+                errorMessage = error.response.data.detail;
+            }
+            alert(`Error: ${errorMessage}`);
+        }
+    };
 
     let loginUser = async (e) => {
         e.preventDefault();
@@ -100,6 +152,7 @@ export const AuthProvider = ({children}) => {
     let contextData = {
         user: user,
         authTokens: authTokens,
+        signupUser: signupUser,
         loginUser: loginUser,
         logoutUser: logoutUser,
     };

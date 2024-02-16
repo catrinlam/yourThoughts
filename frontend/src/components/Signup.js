@@ -1,40 +1,37 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import axios from 'axios';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import AuthContext from "../context/AuthContext";
+import {Link} from "react-router-dom";
 
-const Login = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const data = { username, email, password };
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/api/accounts/signup/', data);
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+const Signup = () => {
+    let {signupUser} = useContext(AuthContext)
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <FormGroup>
-                <Label for="username">Username</Label>
-                <Input type="text" name="username" id="username" placeholder="Username" onChange={e => setUsername(e.target.value)} />
-            </FormGroup>
-            <FormGroup>
-                <Label for="username">Email Address</Label>
-                <Input type="text" name="email" id="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
-            </FormGroup>
-            <FormGroup>
-                <Label for="password">Password</Label>
-                <Input type="password" name="password" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-            </FormGroup>
-            <Button>Submit</Button>
-        </Form>
+        <div>
+            <form onSubmit={signupUser}>
+                <input type="text" name="username" placeholder="Enter username"/>
+                <input type="text" name="email" placeholder="Email"/>
+                <input type="password" name="password" placeholder="enter password"/>
+                <input type="submit"/>
+            </form>
+        </div>
+        // <Form onSubmit={signupUser}>
+        //     <FormGroup>
+        //         <Label for="username">Username</Label>
+        //         <Input type="text" name="username" placeholder="Username"/>
+        //     </FormGroup>
+        //     <FormGroup>
+        //         <Label for="username">Email Address</Label>
+        //         <Input type="text" name="email" placeholder="Email"/>
+        //     </FormGroup>
+        //     <FormGroup>
+        //         <Label for="password">Password</Label>
+        //         <Input type="password" name="password" placeholder="Password"/>
+        //     </FormGroup>
+        //     <Button>Submit</Button>
+        // </Form>
     );
 };
 
-export default Login;
+export default Signup;

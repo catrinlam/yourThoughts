@@ -4,6 +4,7 @@ import Select from 'react-select'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from "../context/AuthContext";
+import api from "../utils/api";
 
 const FeedbackForm = () => {
     const authContext = useContext(AuthContext);
@@ -20,7 +21,7 @@ const FeedbackForm = () => {
 
     useEffect(() => {
         const fetchModules = async () => {
-            const response = await axios.get('http://127.0.0.1:8000/api/modules/');
+            const response = await api.get('/api/modules/');
             setModules(response.data);
             console.log(authContext.user);
         };
@@ -73,7 +74,7 @@ const FeedbackForm = () => {
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-            const response = await axios.post('http://127.0.0.1:8000/api/newfeedback/', feedback, {headers});
+            const response = await api.post('/api/newfeedback/', feedback, {headers});
             console.log(response.data);
         } catch (error) {
             console.error(error);

@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import axios from 'axios';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import AuthContext from "../context/AuthContext";
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     let {loginUser} = useContext(AuthContext)
@@ -13,35 +14,9 @@ const Login = () => {
                 <input type="password" name="password" placeholder="enter password"/>
                 <input type="submit"/>
             </form>
+            <Link style={{color: 'blue'}} to="/signup">Don't have an account? Sign Up</Link>
         </div>
     )
-    // const [username, setUsername] = useState('');
-    // const [password, setPassword] = useState('');
-    //
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const data = { username, password };
-    //     try {
-    //         const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', data);
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-    //
-    // return (
-    //     <Form onSubmit={handleSubmit}>
-    //         <FormGroup>
-    //             <Label for="username">Username</Label>
-    //             <Input type="text" name="username" id="username" placeholder="Username" onChange={e => setUsername(e.target.value)} />
-    //         </FormGroup>
-    //         <FormGroup>
-    //             <Label for="password">Password</Label>
-    //             <Input type="password" name="password" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-    //         </FormGroup>
-    //         <Button>Submit</Button>
-    //     </Form>
-    // );
 };
 
 export default Login;

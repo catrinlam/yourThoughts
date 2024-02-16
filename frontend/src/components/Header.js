@@ -26,7 +26,6 @@ function Header() {
                             <Button variant="info" href="/login">Log in</Button>
                         )}
                         {user && <Navbar.Text >Hello {user.username}!</Navbar.Text>}
-                        {/*<Button variant="info" href="/log-in">Log in</Button>*/}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

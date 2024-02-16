@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, {useState, useEffect, useMemo, useContext} from 'react'
 import Select from 'react-select'
 import AuthContext from "../context/AuthContext";
+import api from "../utils/api";
 
 function FeedbackList() {
     const {user} = useContext(AuthContext);
@@ -13,7 +14,7 @@ function FeedbackList() {
 
     useEffect(() => {
         const fetchModules = async () => {
-            const response = await axios.get('http://127.0.0.1:8000/api/modules/');
+            const response = await api.get('/api/modules/');
             setFeedback(response.data);
         };
 
@@ -26,7 +27,7 @@ function FeedbackList() {
         setSelectedModule(selectedOption);
         const authTokens = JSON.parse(localStorage.getItem('authTokens'));
         const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-        const response = await axios.get(`http://127.0.0.1:8000/api/${selectedOption.value}`, {headers});
+        const response = await api.get(`/api/${selectedOption.value}`, {headers});
         console.log(response.data);
         setModuleResults(response.data);
     };

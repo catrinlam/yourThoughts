@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from feedback.serializers import StudentSerializer, MyTokenObtainPairSerializer
@@ -19,7 +19,7 @@ class SignUpView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user_data = serializer.validated_data['user']
         if User.objects.filter(email=user_data['email']).exists():
-            return Response({"detail": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError({"detail": "A user with this email already exists"})
         else:
             student = serializer.save()
             Token.objects.create(user=student.user)
