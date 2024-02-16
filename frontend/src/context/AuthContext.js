@@ -15,67 +15,43 @@ export const AuthProvider = ({children}) => {
     const navigate = useNavigate();
 
 
-    // let signupUser = async (e) => {
-    //     e.preventDefault();
-    //     const username = e.target.username.value;
-    //     const email = e.target.email.value;
-    //     const password = e.target.password.value;
-    //
-    //     try {
-    //         const signupResponse = await api.post('/api/accounts/signup/', {
-    //             user: {
-    //                 username: username,
-    //                 email: email,
-    //                 password: password
-    //             }
-    //         });
-    //         if (signupResponse.data) {
-    //             // Assume signup was successful
-    //             console.log(signupResponse.data);
-    //
-    //             // Create a mock event object for the loginUser function
-    //             const fakeEvent = {
-    //                 preventDefault: () => {
-    //                 },
-    //                 target: {
-    //                     username: {value: username},
-    //                     password: {value: password}
-    //                 }
-    //             };
-    //             // Call loginUser with the mock event object
-    //             await loginUser(fakeEvent);
-    //         } else {
-    //             console.error('No data in response from signup');
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert('Signup failed. Please try again.');
-    //     }
-    // };
     let signupUser = async (e) => {
         e.preventDefault();
+        const username = e.target.username.value;
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
         try {
-            const response = await api.post('/api/accounts/signup/', {
+            const signupResponse = await api.post('/api/accounts/signup/', {
                 user: {
-                    username: e.target.username.value,
-                    email: e.target.email.value,
-                    password: e.target.password.value
+                    username: username,
+                    email: email,
+                    password: password
                 }
             });
-            if (response.status === 201) {
-                console.log(response.data);
+            if (signupResponse.data) {
+                // Assume signup was successful
+                console.log(signupResponse.data);
+
+                // Create a mock event object for the loginUser function
+                const fakeEvent = {
+                    preventDefault: () => {
+                    },
+                    target: {
+                        username: {value: username},
+                        password: {value: password}
+                    }
+                };
+                // Call loginUser with the mock event object
+                await loginUser(fakeEvent);
                 navigate('/');
+                alert('Signup successful. You are now logged in.');
             } else {
-                console.error(response.data);
-                alert(`Error: ${response.data.detail}`);
+                console.error('No data in response from signup');
             }
         } catch (error) {
             console.error(error);
-            let errorMessage = 'An error occurred. Please try again.';
-            if (error.response && error.response.data && error.response.data.detail) {
-                errorMessage = error.response.data.detail;
-            }
-            alert(`Error: ${errorMessage}`);
+            alert('Signup failed. Please try again.');
         }
     };
 
