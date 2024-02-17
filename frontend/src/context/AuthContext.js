@@ -14,7 +14,6 @@ export const AuthProvider = ({children}) => {
 
     const navigate = useNavigate();
 
-
     let signupUser = async (e) => {
         e.preventDefault();
         const username = e.target.username.value;
@@ -134,9 +133,9 @@ export const AuthProvider = ({children}) => {
     };
 
     useEffect(() => {
-        if (loading && authTokens) {
-            updateToken()
-        }
+        // if (loading && authTokens) {
+        //     updateToken()
+        // }
 
         const REFRESH_INTERVAL = 1000 * 60 * 4 // 4 minutes
         let interval = setInterval(() => {

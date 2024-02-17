@@ -3,25 +3,17 @@ import React, {useState, useEffect, useMemo, useContext} from 'react'
 import Select from 'react-select'
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
+import useFetchModules from "../utils/FetchModules";
 
 function FeedbackList() {
     const {user} = useContext(AuthContext);
-    const [feedbackList, setFeedback] = useState([])
+    const { moduleList } = useFetchModules();
+    const options = moduleList.map(module => ({value: module.code, label: module.title}));
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);
     const loggedIn = localStorage.getItem('loggedIn');
     const initialLoggedIn = loggedIn === 'true';
 
-    useEffect(() => {
-        const fetchModules = async () => {
-            const response = await api.get('/api/modules/');
-            setFeedback(response.data);
-        };
-
-        fetchModules();
-    }, []);
-
-    const options = feedbackList.map(module => ({value: module.code, label: module.title}));
 
     const handleChange = async selectedOption => {
         setSelectedModule(selectedOption);

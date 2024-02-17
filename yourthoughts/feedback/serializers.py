@@ -34,6 +34,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
+        token['is_staff'] = user.is_staff
 
         try:
             student = Student.objects.get(user=user)
@@ -53,7 +54,6 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = ['id', 'code', 'title']
-
 
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):
     class Meta:

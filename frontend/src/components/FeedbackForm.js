@@ -5,33 +5,25 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
+import useFetchModules from "../utils/FetchModules";
 
 const FeedbackForm = () => {
-    const authContext = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
+    const { moduleList } = useFetchModules();
     const [materialRating, setMaterialRating] = useState(0);
     const [materialReview, setMaterialReview] = useState('');
     const [lecturerRating, setLecturerRating] = useState(0);
     const [lecturerReview, setLecturerReview] = useState('');
     const [module, setModule] = useState('');
-    const [modules, setModules] = useState([]);
     const [selectedModule, setSelectedModule] = useState(null);
     const [materialRatingError, setMaterialRatingError] = useState('');
     const [lecturerRatingError, setLecturerRatingError] = useState('');
     const [moduleError, setModuleError] = useState('');
 
-    useEffect(() => {
-        const fetchModules = async () => {
-            const response = await api.get('/api/modules/');
-            setModules(response.data);
-            console.log(authContext.user);
-        };
-
-        fetchModules();
-    }, []);
-
-    const moduleOptions = modules.map(mod => ({value: mod.id, label: mod.title}));
+    const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
 
     const handleModuleChange = selectedOption => {
+        console.log(user);
         setSelectedModule(selectedOption);
         setModule(selectedOption.value);
         setModuleError('');
@@ -62,7 +54,7 @@ const FeedbackForm = () => {
             return;
         }
         const feedback = {
-            student: authContext.user.studentId,
+            student: user.studentId,
             academicYear: 1,
             module: module,
             materialRating,
@@ -70,7 +62,6 @@ const FeedbackForm = () => {
             lecturerRating,
             lecturerFeedback: lecturerReview,
         };
-
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
