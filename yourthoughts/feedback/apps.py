@@ -7,7 +7,8 @@ class FeedbackConfig(AppConfig):
     name = 'feedback'
 
     def ready(self):
-        from .models import AcademicYear  # import your model here
-        now = timezone.now()
-        year = now.year if now.month > 7 else now.year - 1
-        AcademicYear.objects.get_or_create(year=year)
+        import feedback.signals
+    #     from .models import AcademicYear  # import your model here
+    #     now = timezone.now()
+    #     year = now.year if now.month > 7 else now.year - 1
+    #     AcademicYear.objects.get_or_create(year=year)

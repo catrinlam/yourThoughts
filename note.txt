@@ -4,8 +4,6 @@ PasswordSuper
 
 ./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail.com
 
-
-
 sudo docker exec -it yourthoughts-backend-1 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@email.com', 'PasswordSuper')" | python3 manage.py shell
 
 User: student1
@@ -57,6 +55,8 @@ systemctl status nginx.service
 nginx -t -c /etc/nginx/nginx.conf
 
 db:
+sudo chmod -R 755 /home/ubuntu/db
+
 Dump the database content to a file. You can use the pg_dump tool which is included with PostgreSQL. This command needs to be run inside the Docker container:
 sudo docker exec -t yourthoughts-db-1 pg_dumpall -c -U postgres > db_backup.sql
 This command will create a backup file named db_backup.sql in the current directory on your host machine. The -c option tells pg_dumpall to include commands to clean (drop) databases before recreating them. The -U postgres option specifies the database user name.
