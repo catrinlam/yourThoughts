@@ -29,10 +29,8 @@ export const AuthProvider = ({children}) => {
                 }
             });
             if (signupResponse.data) {
-                // Assume signup was successful
                 console.log(signupResponse.data);
 
-                // Create a mock event object for the loginUser function
                 const fakeEvent = {
                     preventDefault: () => {
                     },
@@ -41,7 +39,7 @@ export const AuthProvider = ({children}) => {
                         password: {value: password}
                     }
                 };
-                // Call loginUser with the mock event object
+
                 await loginUser(fakeEvent);
                 navigate('/');
                 alert('Signup successful. You are now logged in.');

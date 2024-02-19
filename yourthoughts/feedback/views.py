@@ -6,6 +6,10 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthentic
 class ModuleList(generics.ListAPIView):
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
+
+class AcademicYearList(generics.ListAPIView):
+    queryset = models.AcademicYear.objects.all()
+    serializer_class = AcademicYearSerializer
 class FeedbackList(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = models.Feedback.objects.all()
@@ -25,6 +29,20 @@ class CreateFeedback(generics.CreateAPIView):
     serializer_class = FeedbackSerializer
 
 """Admin only views"""
+class CreateAcademicYear(generics.CreateAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.AcademicYear.objects.all()
+    serializer_class = AcademicYearSerializer
+
+class DeleteAcademicYear(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.AcademicYear.objects.all()
+    serializer_class = AcademicYearSerializer
+
+class EditAcademicYear(generics.UpdateAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.AcademicYear.objects.all()
+    serializer_class = AcademicYearSerializer
 
 class CreateModule(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
@@ -37,7 +55,7 @@ class DeleteModule(generics.DestroyAPIView):
     serializer_class = ModuleSerializer
 
 class EditModule(generics.UpdateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
 

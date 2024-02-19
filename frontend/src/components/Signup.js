@@ -1,36 +1,33 @@
 import React, {useContext, useState} from 'react';
-import axios from 'axios';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import AuthContext from "../context/AuthContext";
-import {Link} from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+
 
 const Signup = () => {
-    let {signupUser} = useContext(AuthContext)
+    let { signupUser } = useContext(AuthContext);
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     return (
         <div>
-            <form onSubmit={signupUser}>
-                <input type="text" name="username" placeholder="Enter username"/>
-                <input type="text" name="email" placeholder="Email"/>
-                <input type="password" name="password" placeholder="enter password"/>
-                <input type="submit"/>
-            </form>
+            <Form onSubmit={signupUser}>
+                <Form.Group>
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} name="username"/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Email Address</Form.Label>
+                    <Form.Control type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} name="email"/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} name="password"/>
+                </Form.Group>
+                <Button type="submit" variant="info">Submit</Button>
+            </Form>
         </div>
-        // <Form onSubmit={signupUser}>
-        //     <FormGroup>
-        //         <Label for="username">Username</Label>
-        //         <Input type="text" name="username" placeholder="Username"/>
-        //     </FormGroup>
-        //     <FormGroup>
-        //         <Label for="username">Email Address</Label>
-        //         <Input type="text" name="email" placeholder="Email"/>
-        //     </FormGroup>
-        //     <FormGroup>
-        //         <Label for="password">Password</Label>
-        //         <Input type="password" name="password" placeholder="Password"/>
-        //     </FormGroup>
-        //     <Button>Submit</Button>
-        // </Form>
     );
 };
 

@@ -1,9 +1,9 @@
 import {useState} from "react";
-import api from "../utils/api";
-import useFetchModules from "../utils/FetchModules";
+import api from "../../utils/api";
+import useFetchModules from "../../utils/FetchModules";
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
-import {Button} from "reactstrap";
+import Button from 'react-bootstrap/Button';
 
 const ManageModules = () => {
     const {moduleList, fetchModules} = useFetchModules();

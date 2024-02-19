@@ -14,7 +14,7 @@ function Header() {
     const isAdmin = user ? user.is_staff : false;
 
     return (
-        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+        <Navbar expand="lg" className="bg-body-tertiary" bg="light" data-bs-theme="light">
             <Container>
                 <Navbar.Brand href="/">YourThoughts</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -22,11 +22,13 @@ function Header() {
                     <Nav>
                         <Nav.Link href='/'>Results</Nav.Link>
                         {initialLoggedIn && !isAdmin && <Nav.Link href="/feedback">Feedback</Nav.Link>}
-                        {isAdmin && <Nav.Link href="/manage-modules">Manage Modules</Nav.Link>}
+                        {isAdmin && <Nav.Link href="/admin">Admin Dashboard</Nav.Link>}
+                        {/*{isAdmin && <Nav.Link href="/manage-modules">Manage Modules</Nav.Link>}*/}
+                        {/*{isAdmin && <Nav.Link href="/manage-academicyears">Manage Academic Years</Nav.Link>}*/}
                         {user ? (
-                            <Button onClick={logoutUser}>Logout</Button>
+                            <Button variant="danger" onClick={logoutUser}>Logout</Button>
                         ) : (
-                            <Button variant="info" href="/login">Log in</Button>
+                            <Button variant="info" href="/auth">Sign in/Sign up</Button>
                         )}
                         {user && <Navbar.Text >Hello {user.username}!</Navbar.Text>}
                     </Nav>

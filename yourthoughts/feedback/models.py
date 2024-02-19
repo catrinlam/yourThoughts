@@ -6,7 +6,7 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class AcademicYear(models.Model):
-    year = models.CharField(max_length=15)
+    year = models.PositiveIntegerField(validators=[MinValueValidator(2010), MaxValueValidator(2040)])
 
 class Module(models.Model):
     code = models.CharField(max_length=8, unique=True)

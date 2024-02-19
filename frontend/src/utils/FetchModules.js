@@ -7,6 +7,7 @@ const useFetchModules = () => {
     const fetchModules = async () => {
         const response = await api.get('/api/modules/');
         setModuleList(response.data);
+        console.log(response.data);
     };
 
     useEffect(() => {
