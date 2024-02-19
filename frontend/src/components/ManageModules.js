@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import api from "../utils/api";
-import authContext from "../context/AuthContext";
 import useFetchModules from "../utils/FetchModules";
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
@@ -10,35 +9,65 @@ const ManageModules = () => {
     const {moduleList, fetchModules} = useFetchModules();
     const [moduleCode, setModuleCode] = useState('');
     const [moduleTitle, setModuleTitle] = useState('');
-    const [showForm, setShowForm] = useState(false);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [editModuleId, setEditModuleId] = useState(null);
+
 
     const handleSubmit = async () => {
-        const module = {
+        const newModule = {
             code: moduleCode,
             title: moduleTitle
         };
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-            const response = await api.post('/api/newmodule/', module, {headers});
+            const response = await api.post('/api/newmodule/', newModule, {headers});
             console.log(response);
             await fetchModules();
-            setShowForm(false);
+            setShowCreateForm(false);
         } catch (e) {
             console.error(e);
         }
     }
 
     const handleDelete = async (id) => {
-        alert('Are you sure you want to delete this module?')
-        try {
-            const authTokens = JSON.parse(localStorage.getItem('authTokens'));
-            const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-            const response = await api.delete(`/api/deletemodule/${id}`, {headers});
-            console.log(response);
-            await fetchModules();  // refresh the data
-        } catch (e) {
-            console.error(e);
+        if (window.confirm('Are you sure you want to delete this module?')) {
+            try {
+                const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+                const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
+                const response = await api.delete(`/api/deletemodule/${id}`, {headers});
+                console.log(response);
+                await fetchModules();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
+    const handleEditModule = async (module) => {
+        setModuleCode(module.code);
+        setModuleTitle(module.title);
+        setEditModuleId(module.id);
+        setShowEditForm(true);
+    }
+
+    const handleEdit = async () => {
+        if (window.confirm('Are you sure you want to update this module?')) {
+            const module = {
+                code: moduleCode,
+                title: moduleTitle
+            };
+            try {
+                const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+                const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
+                const response = await api.put(`/api/editmodule/${editModuleId}/`, module, {headers});
+                console.log(response);
+                await fetchModules();
+                setShowEditForm(false);
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
@@ -61,14 +90,32 @@ const ManageModules = () => {
                         <td>{module.code}</td>
                         <td>{module.title}</td>
                         <td>
-                            <Button variant="danger" onClick={() => handleDelete(module.id)}>Delete</Button>
+                            <Button variant="danger" style={{marginRight: '10px'}}
+                                    onClick={() => handleDelete(module.id)}>Delete</Button>
+                            <Button variant="info" onClick={() => handleEditModule(module)}>Edit</Button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </Table>
-            {!showForm && <Button variant="info" onClick={() => setShowForm(true)}>Create Module</Button>}
-            {showForm && (
+            {showEditForm && (
+                <>
+                    <h3>Edit module</h3>
+                    <Form.Group controlId="moduleCode">
+                        <Form.Label>Module Code</Form.Label>
+                        <Form.Control type="text" value={moduleCode}
+                                      onChange={(e) => setModuleCode(e.target.value)}/>
+                    </Form.Group>
+                    <Form.Group controlId="moduleTitle">
+                        <Form.Label>Module Title</Form.Label>
+                        <Form.Control type="text" value={moduleTitle}
+                                      onChange={(e) => setModuleTitle(e.target.value)}/>
+                    </Form.Group>
+                    <Button variant="info" onClick={handleEdit}>Submit</Button>
+                </>
+            )}
+            {!showCreateForm && <Button variant="info" onClick={() => setShowCreateForm(true)}>Create Module</Button>}
+            {showCreateForm && (
                 <>
                     <h3>Add a new module</h3>
                     <Form.Group controlId="moduleCode">

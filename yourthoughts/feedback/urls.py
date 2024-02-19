@@ -7,5 +7,6 @@ urlpatterns = [
     path('newfeedback/', views.CreateFeedback.as_view(), name='newfeedback'),
     path('newmodule/', views.CreateModule.as_view(), name='newmodule'),
     path('deletemodule/<int:pk>/', views.DeleteModule.as_view(), name='deletemodule'),
+    path('editmodule/<int:pk>/', views.EditModule.as_view(), name='editmodule'),
     path('<str:moduleCode>/', views.FeedbackList.as_view(), name='feedbackList'),
 ]

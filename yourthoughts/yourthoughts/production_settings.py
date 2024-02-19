@@ -170,11 +170,11 @@ SIMPLE_JWT = {
      'BLACKLIST_AFTER_ROTATION': True
 }
 
-DJOSER = {
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SET_PASSWORD_RETYPE': True,
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'activate/{uid}/{token}'
-}
+# DJOSER = {
+#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+#     'SET_PASSWORD_RETYPE': True,
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'ACTIVATION_URL': 'activate/{uid}/{token}'
+# }
