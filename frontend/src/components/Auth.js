@@ -20,15 +20,14 @@ const AuthPage = () => {
                 className="mb-3"
             >
                 <Tab eventKey="signIn" title="Sign In">
-                    {/* Sign In Form */}
                     <Form onSubmit={loginUser}>
-                        <Form.Group>
+                        <Form.Group className="mb-2">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text" placeholder="Username"
                                           onChange={(e) => setUsername(e.target.value)}
                                           name="username"/>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="mb-3">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password"
                                           onChange={(e) => setPassword(e.target.value)}
@@ -39,17 +38,17 @@ const AuthPage = () => {
                 </Tab>
                 <Tab eventKey="signUp" title="Sign Up">
                     <Form onSubmit={signupUser}>
-                        <Form.Group>
+                        <Form.Group className="mb-2">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text" placeholder="Username"
                                           onChange={(e) => setUsername(e.target.value)} name="username"/>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="mb-2">
                             <Form.Label>Email Address</Form.Label>
                             <Form.Control type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)}
                                           name="email"/>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="mb-3">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password"
                                           onChange={(e) => setPassword(e.target.value)} name="password"/>

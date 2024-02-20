@@ -12,6 +12,9 @@ import {useNavigate} from 'react-router-dom';
 const FeedbackForm = () => {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
+    const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
+    const [academicYear, setAcademicYear] = useState(0);
+    const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [materialRating, setMaterialRating] = useState(0);
     const [materialReview, setMaterialReview] = useState('');
     const [lecturerRating, setLecturerRating] = useState(0);
@@ -24,6 +27,19 @@ const FeedbackForm = () => {
     const navigate = useNavigate();
 
     const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
+
+    console.log(academicYearsList);
+
+    useEffect(() => {
+
+        if (academicYearsList.length > 0) {
+            // Assuming the 'year' field can be used to determine the latest academic year
+            const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
+            const latestYear = sortedYears[0];
+            setAcademicYear(latestYear.id); // Assuming you're using the ID as the value
+            setSelectedAcademicYear({value: latestYear.id, label: latestYear.year});
+        }
+    }, [academicYearsList]);
 
     const handleModuleChange = selectedOption => {
         setSelectedModule(selectedOption);
@@ -52,7 +68,7 @@ const FeedbackForm = () => {
     const handleSubmit = async () => {
         const feedback = {
             student: user.studentId,
-            academicYear: 1,
+            academicYear: academicYear,
             module: module,
             materialRating,
             materialFeedback: materialReview,

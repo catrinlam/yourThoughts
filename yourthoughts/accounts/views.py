@@ -6,12 +6,8 @@ from feedback.serializers import StudentSerializer, MyTokenObtainPairSerializer
 from feedback.models import Student
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-class ListUsers(generics.ListAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-    permission_classes = [permissions.AllowAny]
 
-class SignUpView(generics.CreateAPIView):
+class SignUp(generics.CreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [permissions.AllowAny]
@@ -28,13 +24,35 @@ class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
     serializer_class = MyTokenObtainPairSerializer
 
-class ProfileView(generics.RetrieveUpdateAPIView):
+class Profile(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         student = Student.objects.get(user=request.user)
         serializer = StudentSerializer(student)
         return Response(serializer.data)
+
+"""Admin only views"""
+class ListUsers(generics.ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.AllowAny]
+
+class CreateUser(generics.CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class EditUser(generics.UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAdminUser]
+class DeleteUser(generics.DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 """ Concrete View Classes
 #CreateAPIView

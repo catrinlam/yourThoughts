@@ -16,7 +16,15 @@ function Header() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary" bg="light" data-bs-theme="light">
             <Container>
-                <Navbar.Brand href="/">YourThoughts</Navbar.Brand>
+                <Navbar.Brand href="/">
+                    <img
+                        alt=""
+                        src="/logo192.png"
+                        width="30"
+                        height="30"
+                        className="d-inline-block"
+                    />{' '}
+                    YourThoughts</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
@@ -30,7 +38,7 @@ function Header() {
                         ) : (
                             <Button variant="info" href="/auth">Sign in/Sign up</Button>
                         )}
-                        {user && <Navbar.Text >Hello {user.username}!</Navbar.Text>}
+                        {user && <Navbar.Text>Hello {user.username}!</Navbar.Text>}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

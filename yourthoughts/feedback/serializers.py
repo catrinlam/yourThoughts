@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'is_staff']
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -68,6 +68,14 @@ class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
                   'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['id', 'student', 'academicYear', 'module',
+                  'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+
+class FeedbackListSerializer(serializers.ModelSerializer):
+    module = ModuleSerializer(read_only=True)
+    academicYear = AcademicYearSerializer(read_only=True)
     class Meta:
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
