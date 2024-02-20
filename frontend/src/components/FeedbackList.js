@@ -4,10 +4,11 @@ import Select from 'react-select'
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchModules from "../utils/FetchModules";
+import useFetchData from "../utils/FetchData";
 
 function FeedbackList() {
     const {user} = useContext(AuthContext);
-    const { moduleList } = useFetchModules();
+    const {dataList: moduleList} = useFetchData('/api/modules/');
     const options = moduleList.map(module => ({value: module.code, label: module.title}));
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);

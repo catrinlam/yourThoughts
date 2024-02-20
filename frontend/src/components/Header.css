@@ -14,6 +14,10 @@ a {
   margin-right: 20px;
 }
 
+.navbar {
+  margin-bottom: 5%;
+}
+
 .navbar-brand {
   font-size: 25px; /* Adjust size as needed */
   margin-right: auto !important;

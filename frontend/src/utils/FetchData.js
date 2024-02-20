@@ -1,13 +1,15 @@
 import {useState, useEffect} from 'react';
 import api from "../utils/api";
 
-const useFetchData = (endpoint) => {
+const useFetchData = (endpoint, requiresAuth = false) => {
     const [dataList, setDataList] = useState([]);
     const [error, setError] = useState(null);
 
     const fetchData = async () => {
         try {
-            const response = await api.get(endpoint);
+            const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+            const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
+            const response = await api.get(endpoint, {headers});
             setDataList(response.data);
             setError(null);
         } catch (err) {
@@ -20,6 +22,6 @@ const useFetchData = (endpoint) => {
         fetchData();
     }, [endpoint]);
 
-    return { dataList, fetchData, error };
+    return {dataList, fetchData, error};
 };
 export default useFetchData;

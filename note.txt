@@ -4,7 +4,9 @@ PasswordSuper
 
 ./manage.py createsuperuser --username admin --email helpdesk.yourthoughts@gmail.com
 
-sudo docker exec -it yourthoughts-backend-1 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@email.com', 'PasswordSuper')" | python3 manage.py shell
+sudo docker exec -it yourthoughts-backend-1 python manage.py shell --settings=yourthoughts.production_settings -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@email.com', 'PasswordSuper')"
+
+sudo docker exec -it yourthoughts-backend-1 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@email.com', 'PasswordSuper')" | python3 manage.py shell --settings=yourthoughts.production_settings
 
 User: student1
 user@email.com

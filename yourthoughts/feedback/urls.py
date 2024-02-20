@@ -12,5 +12,7 @@ urlpatterns = [
     path('newmodule/', views.CreateModule.as_view(), name='newmodule'),
     path('deletemodule/<int:pk>/', views.DeleteModule.as_view(), name='deletemodule'),
     path('editmodule/<int:pk>/', views.EditModule.as_view(), name='editmodule'),
-    path('<str:moduleCode>/', views.FeedbackList.as_view(), name='feedbackList'),
+    path('feedbacks/', views.FeedbackList.as_view(), name='feedbackList'),
+    path('deletefeedback/<int:pk>/', views.DeleteFeedback.as_view(), name='deletefeedback'),
+    path('<str:moduleCode>/', views.ModuleFeedback.as_view(), name='feedbackList'),
 ]

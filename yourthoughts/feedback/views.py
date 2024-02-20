@@ -4,13 +4,11 @@ from .serializers import StudentSerializer, AcademicYearSerializer, ModuleSerial
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 
 class ModuleList(generics.ListAPIView):
+    permission_classes = [AllowAny]
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
 
-class AcademicYearList(generics.ListAPIView):
-    queryset = models.AcademicYear.objects.all()
-    serializer_class = AcademicYearSerializer
-class FeedbackList(generics.ListAPIView):
+class ModuleFeedback(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = models.Feedback.objects.all()
 
@@ -29,6 +27,10 @@ class CreateFeedback(generics.CreateAPIView):
     serializer_class = FeedbackSerializer
 
 """Admin only views"""
+class AcademicYearList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.AcademicYear.objects.all()
+    serializer_class = AcademicYearSerializer
 class CreateAcademicYear(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = models.AcademicYear.objects.all()
@@ -58,6 +60,16 @@ class EditModule(generics.UpdateAPIView):
     permission_classes = [IsAdminUser]
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
+
+class FeedbackList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.Module.objects.all()
+    serializer_class = FeedbackSerializer
+
+class DeleteFeedback(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = models.Feedback.objects.all()
+    serializer_class = FeedbackSerializer
 
 """ Concrete View Classes
 #CreateAPIView

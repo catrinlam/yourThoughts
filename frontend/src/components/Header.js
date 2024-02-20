@@ -20,8 +20,8 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link href='/'>Results</Nav.Link>
-                        {initialLoggedIn && !isAdmin && <Nav.Link href="/feedback">Feedback</Nav.Link>}
+                        <Nav.Link href='/results'>Results</Nav.Link>
+                        {initialLoggedIn && !isAdmin && <Nav.Link href="/feedback"> Write a Feedback</Nav.Link>}
                         {isAdmin && <Nav.Link href="/admin">Admin Dashboard</Nav.Link>}
                         {/*{isAdmin && <Nav.Link href="/manage-modules">Manage Modules</Nav.Link>}*/}
                         {/*{isAdmin && <Nav.Link href="/manage-academicyears">Manage Academic Years</Nav.Link>}*/}

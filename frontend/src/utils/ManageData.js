@@ -4,13 +4,21 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import api from "./api";
 
-const ManageModels = ({ itemList, fetchItems, itemDescriptor, apiEndpoints, formFields }) => {
+const ManageModels = ({ itemList, fetchItems, itemDescriptor, apiEndpoints, formFields, canCreate = true, canEdit = true}) => {
     const [formData, setFormData] = useState(formFields.reduce((acc, field) => ({ ...acc, [field]: '' }), {}));
     const [showForm, setShowForm] = useState(false);
     const [editItemId, setEditItemId] = useState(null);
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleCancel = () => {
+        if (window.confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+            setShowForm(false);
+            setEditItemId(null);
+            setFormData(formFields.reduce((acc, field) => ({ ...acc, [field]: '' }), {})); // Reset form data
+        }
     };
 
     const handleCreateOrUpdate = async () => {
@@ -68,9 +76,9 @@ const ManageModels = ({ itemList, fetchItems, itemDescriptor, apiEndpoints, form
                                     <td key={`${item.id}-${field}`}>{item[field]}</td>
                                 ))}
                                 <td>
-                                    <Button variant="info" onClick={() => handleEdit(item)} style={{ marginRight: '10px' }}>
+                                    { canEdit && <Button variant="info" onClick={() => handleEdit(item)} style={{ marginRight: '10px' }}>
                                         Edit
-                                    </Button>
+                                    </Button> }
                                     <Button variant="danger" onClick={() => handleDelete(item.id)}>
                                         Delete
                                     </Button>
@@ -84,7 +92,7 @@ const ManageModels = ({ itemList, fetchItems, itemDescriptor, apiEndpoints, form
                     )}
                 </tbody>
             </Table>
-            {showForm && (
+            {(canCreate || canEdit) && showForm && (
                 <>
                     <h3>{editItemId ? `Edit ${itemDescriptor}` : `Add a new ${itemDescriptor}`}</h3>
                     {formFields.map(field => (
@@ -101,9 +109,12 @@ const ManageModels = ({ itemList, fetchItems, itemDescriptor, apiEndpoints, form
                     <Button variant="info" onClick={handleCreateOrUpdate}>
                         {editItemId ? 'Update' : 'Create'}
                     </Button>
+                    <Button variant="secondary" onClick={handleCancel} style={{ marginLeft: '10px' }}>
+                        Cancel
+                    </Button>
                 </>
             )}
-            {!showForm && (
+            {canCreate && !showForm && (
                 <Button variant="info" onClick={() => setShowForm(true)}>
                     {`Create ${itemDescriptor}`}
                 </Button>
