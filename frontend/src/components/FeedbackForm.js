@@ -1,11 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import axios from 'axios';
 import Select from 'react-select'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
-import useFetchModules from "../utils/FetchModules";
 import useFetchData from "../utils/FetchData";
 import {useNavigate} from 'react-router-dom';
 
@@ -28,12 +26,8 @@ const FeedbackForm = () => {
 
     const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
 
-    console.log(academicYearsList);
-
     useEffect(() => {
-
         if (academicYearsList.length > 0) {
-            // Assuming the 'year' field can be used to determine the latest academic year
             const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
             const latestYear = sortedYears[0];
             setAcademicYear(latestYear.id); // Assuming you're using the ID as the value

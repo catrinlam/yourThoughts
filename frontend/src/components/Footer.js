@@ -9,25 +9,22 @@ const Footer = () => {
       <Container>
         <Row className="justify-content-between">
           <Col md="auto" className="text-md-start px-0">
-            <img
-                        alt=""
-                        src="/logo192.png"
-                        width="30"
-                        height="30"
-                        className="d-inline-block"
-                    />{' '}
+            {/*<img*/}
+            {/*            alt=""*/}
+            {/*            src="/logo192.png"*/}
+            {/*            width="30"*/}
+            {/*            height="30"*/}
+            {/*            className="d-inline-block"*/}
+            {/*        />*/}
             <span>© {currentYear} YourThoughts</span>
           </Col>
           <Col md="auto" className="text-md-center px-0">
-
             Developed by <a href="https://your-link-here.com" className="text-primary" target="_blank"
                             rel="noopener noreferrer">Cheuk Yu Lam</a><br/>
               Source code available on <a href="https://git.cs.bham.ac.uk/projects-2023-24/cxl031" className="text-primary" target="_blank"
                             rel="noopener noreferrer">GitLab</a>
-
             </Col>
             <Col md="auto" className="text-md-end px-0">
-
                     Supervised by <a href="https://shah.fyi/" className="text-primary" target="_blank"
                                      rel="noopener noreferrer">Dr. S Madasar Shah</a>
             </Col>

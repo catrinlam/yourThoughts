@@ -18,8 +18,11 @@ const Index = () => {
                             Enhances the accessibility of module feedback, allowing both current and
                             prospective students to gain insights into the learning experience.
                         </p>
-                        <Button as={Link} to="/results" variant="primary" className="mb-3">View Module Feedback</Button>
-                        <Button as={Link} to="/auth" variant="secondary">Log in/Sign up for more features</Button>
+                        <p>
+                            View feedback on modules, lecturers and academic years.
+                        </p>
+                        <Button as={Link} to="/results" variant="primary" className="mb-md-2">View Module Feedback</Button>
+                        <Button as={Link} to="/auth" variant="secondary" className="mb-md-2">Log in/Sign up for more features</Button>
                     </Col>
                 </Row>
             </Container>
