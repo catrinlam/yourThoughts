@@ -73,7 +73,7 @@ export const AuthProvider = ({children}) => {
                 setUser(decodedUser);
                 console.log(decodedUser);
                 localStorage.setItem('loggedIn', true)
-                navigate('/');
+                navigate('/results');
             } else {
                 alert('Something went wrong while logging in the user. The username or passoword may be wrong. Please try again.');
             }

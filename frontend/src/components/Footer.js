@@ -1,21 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import {ThemeContext} from "../App";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const theme = useContext(ThemeContext);
 
   return (
-    <footer className="footer mt-auto py-3 bg-light text-muted">
+    <footer className={`footer mt-auto py-3 bg-light text-muted ${theme}-theme`}>
       <Container>
         <Row className="justify-content-between">
           <Col md="auto" className="text-md-start px-0">
-            {/*<img*/}
-            {/*            alt=""*/}
-            {/*            src="/logo192.png"*/}
-            {/*            width="30"*/}
-            {/*            height="30"*/}
-            {/*            className="d-inline-block"*/}
-            {/*        />*/}
             <span>© {currentYear} YourThoughts</span>
           </Col>
           <Col md="auto" className="text-md-center px-0">

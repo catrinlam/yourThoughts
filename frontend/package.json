@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.3",
     "flowbite-react": "^0.7.2",
     "follow-redirects": "^1.15.5",
     "jwt-decode": "^4.0.0",

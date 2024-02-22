@@ -11,41 +11,43 @@ import {AuthProvider} from './context/AuthContext';
 
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
-import { createGlobalStyle } from 'styled-components';
 
-// const GlobalStyle = createGlobalStyle`
-//     App-content {
-//         margin: 0 5%; /* Default margin for small screens */
-//     }
-//
-//     @media (min-width: 768px) {
-//         App-content {
-//             margin: 0 5%; /* Larger margin for medium screens and up */
-//         }
-//     }
-// `;
+import {createContext, useState} from "react";
+
+export const ThemeContext = createContext(null);
 
 function App() {
+    const [theme, setTheme] = useState(
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    const toggleTheme = () => {
+        setTheme(prevTheme => {
+            return prevTheme === 'light' ? 'dark' : 'light';
+        });
+    }
     return (
-        <div className="App d-flex flex-column min-vh-100">
-            {/*<GlobalStyle />*/}
-            <Router>
-                <AuthProvider>
-                    <Header />
-                    <div className="App-content flex-fill">
-                        <Routes>
-                            <Route path="/" element={<Index/>}/>
-                            <Route path="/results" element={<FeedbackList/>}/>
-                            <Route path="/feedback" element={<FeedbackForm/>}/>
-                            <Route path="/auth" element={<Auth/>}/>
-                            <Route path="/admin" element={<AdminDashboard/>}/>
-                        </Routes>
-                    </div>
-                    <Footer />
-                </AuthProvider>
-            </Router>
-        </div>
+        <ThemeContext.Provider value={{theme, toggleTheme}}>
+            <div className={`App d-flex flex-column min-vh-100 ${theme}-theme`}>
+                <Router>
+                    <AuthProvider>
+                        <Header className="App-header"/>
+                        <div className="App-content flex-fill">
+                            <Routes>
+                                <Route path="/" element={<Index/>}/>
+                                <Route path="/results" element={<FeedbackList/>}/>
+                                <Route path="/feedback" element={<FeedbackForm/>}/>
+                                <Route path="/auth" element={<Auth/>}/>
+                                <Route path="/admin" element={<AdminDashboard/>}/>
+                            </Routes>
+                        </div>
+                        <Footer className="App-footer"/>
+                    </AuthProvider>
+                </Router>
+            </div>
+        </ThemeContext.Provider>
     );
 }
+
 export default App;
