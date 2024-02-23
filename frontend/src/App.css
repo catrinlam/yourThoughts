@@ -25,6 +25,11 @@
     color: var(--text-color-dark);
 }
 
+* {
+    transition: all 0.04s ease-in-out;
+}
+
+
 /*.App-header {*/
 /*    background-color: var(--background-color-dark);*/
 /*    color: var(--text-color-dark);*/

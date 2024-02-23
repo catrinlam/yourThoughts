@@ -7,7 +7,7 @@ const Footer = () => {
   const theme = useContext(ThemeContext);
 
   return (
-    <footer className={`footer mt-auto py-3 bg-light text-muted ${theme}-theme`}>
+    <footer className="footer mt-auto py-3 bg-light text-muted">
       <Container>
         <Row className="justify-content-between">
           <Col md="auto" className="text-md-start px-0">

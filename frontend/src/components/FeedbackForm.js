@@ -95,6 +95,7 @@ const FeedbackForm = () => {
         <Form.Group className="mb-3">
             <Form.Label>Material Rating:</Form.Label>
             <Form.Control type="number" min="0" max="5" onChange={handleMaterialRatingChange}/>
+            <small>Rating must be between 0 and 5</small>
             {materialRatingError && <div style={{color: 'red'}}>{materialRatingError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
@@ -106,10 +107,11 @@ const FeedbackForm = () => {
         <Form.Group className="mb-3">
             <Form.Label>Lecturer Rating:</Form.Label>
             <Form.Control type="number" min="0" max="5" onChange={handleLecturerRatingChange}/>
+            <small>Rating must be between 0 and 5</small>
             {lecturerRatingError && <div style={{color: 'red'}}>{lecturerRatingError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
-            <Form.Label>Lecturer Review:</Form.Label>
+        <Form.Label>Lecturer Review:</Form.Label>
             <Form.Control
                 as="textarea"
                 rows={3}
