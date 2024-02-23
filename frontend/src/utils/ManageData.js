@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Table, Form, Button, Dropdown} from 'react-bootstrap';
+import {Table, Form, Button} from 'react-bootstrap';
 import api from "./api";
 
 const ManageModels = ({
@@ -107,7 +107,7 @@ const ManageModels = ({
             {(canCreate || canEdit) && showForm && (
                 <>
                     <h3>{editItemId ? `Edit ${itemDescriptor}` : `Add a new ${itemDescriptor}`}</h3>
-                    {formFields.map(field => (
+                    {formFields.filter(field => field !== 'id').map(field => (
                         <Form.Group key={field} controlId={field}>
                             <Form.Label>{field.charAt(0).toUpperCase() + field.slice(1)}</Form.Label>
                             <Form.Control

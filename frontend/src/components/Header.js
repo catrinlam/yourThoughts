@@ -6,10 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import AuthContext from "../context/AuthContext";
-import {ThemeContext} from "../App";
-
 function Header() {
-    // const {theme, toggleTheme} = useContext(ThemeContext);
     let {user, logoutUser} = useContext(AuthContext)
     const loggedIn = localStorage.getItem('loggedIn');
     const initialLoggedIn = loggedIn === 'true';

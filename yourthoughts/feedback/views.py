@@ -46,11 +46,11 @@ class SummarizeFeedbackView(APIView):
             feedbacks = models.Feedback.objects.filter(module__code=moduleCode, academicYear__year=academicYear)
 
             material_texts = " ".join([f.materialFeedback for f in feedbacks if f.materialFeedback])
-            summary_material = summarizer(material_texts)
+            summary_material = summarizer(material_texts) if material_texts else "No material feedback provided."
 
             if request.user.is_authenticated:
                 lecturer_texts = " ".join([f.lecturerFeedback for f in feedbacks if f.lecturerFeedback])
-                summary_lecturer = summarizer(lecturer_texts)
+                summary_lecturer = summarizer(lecturer_texts) if lecturer_texts else "No lecturer feedback provided."
                 serializer = AuthenticatedFeedbackSummarySerializer(data={
                     'module': moduleCode,
                     'academicYear': academicYear,

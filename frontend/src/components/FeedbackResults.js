@@ -1,18 +1,17 @@
 import React, {useState, useMemo, useContext, useEffect} from 'react'
 import Select from 'react-select'
-import {Accordion, Card, ListGroup, ListGroupItem, Alert, ProgressBar, Button} from 'react-bootstrap';
+import {Accordion, Card, ListGroup, ListGroupItem, Alert} from 'react-bootstrap';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
 
-function FeedbackList() {
+function FeedbackResults() {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
     const options = moduleList.map(module => ({value: module.code, label: module.title}));
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);
-    const [academicYear, setAcademicYear] = useState(0);
     const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [summary, setSummary] = useState(null);
 
@@ -20,7 +19,6 @@ function FeedbackList() {
         if (academicYearsList.length > 0) {
             const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
             const latestYear = sortedYears[0];
-            setAcademicYear(latestYear.id); // Assuming you're using the ID as the value
             setSelectedAcademicYear({value: latestYear.id, label: latestYear.year});
         }
     }, [academicYearsList]);
@@ -38,8 +36,8 @@ function FeedbackList() {
     };
 
     const materialRatingAvg = useMemo(() => {
-        if (!moduleResults) {
-            return null;
+        if (!moduleResults || moduleResults.length === 0) {
+            return "No ratings yet";
         }
 
         const materialRatingSum = moduleResults.reduce((sum, result) => sum + result.materialRating, 0);
@@ -47,8 +45,8 @@ function FeedbackList() {
     }, [moduleResults]);
 
     const lecturerRatingAvg = useMemo(() => {
-        if (!moduleResults) {
-            return null;
+        if (!moduleResults || moduleResults.length === 0) {
+            return "No ratings yet";
         }
 
         const lecturerRatingSum = moduleResults.reduce((sum, result) => sum + result.lecturerRating, 0);
@@ -89,7 +87,7 @@ function FeedbackList() {
                                     <ListGroup variant="flush">
                                         <ListGroupItem>
                                             <strong>Material Ratings</strong>
-                                            <p>Average Material Rating: {materialRatingAvg || 'No ratings yet'}</p>
+                                            <p>Average Material Rating: {materialRatingAvg}</p>
                                         </ListGroupItem>
                                         <ListGroupItem>
                                             <strong>Material Feedbacks</strong>
@@ -111,7 +109,7 @@ function FeedbackList() {
                                             <ListGroup variant="flush">
                                                 <ListGroupItem>
                                                     <strong>Lecturer Ratings</strong>
-                                                    <p>Average Lecturer Rating: {lecturerRatingAvg || 'No ratings yet'}</p>
+                                                    <p>Average Lecturer Rating: {lecturerRatingAvg}</p>
                                                 </ListGroupItem>
                                                 <ListGroupItem>
                                                     <strong>Lecturer Feedbacks</strong>
@@ -133,7 +131,7 @@ function FeedbackList() {
     );
 }
 
-export default FeedbackList;
+export default FeedbackResults;
 
 
 //     <div className="container mt-4">
