@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import ManageData from "../utils/ManageData";
 import useFetchData from "../utils/FetchData";
 import AuthContext from "../context/AuthContext";
-import {Tabs, Tab, Form, Button} from 'react-bootstrap';
+import {Tabs, Tab} from 'react-bootstrap';
 
 const AdminDashboard = () => {
     const [key, setKey] = useState('years');

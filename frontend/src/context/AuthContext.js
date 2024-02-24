@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from 'react';
+import {createContext, useCallback, useEffect, useState} from 'react';
 import {jwtDecode} from 'jwt-decode'; // Use named import for jwtDecode
 import {useNavigate} from 'react-router-dom';
 import api from "../utils/api";
@@ -48,7 +48,7 @@ export const AuthProvider = ({children}) => {
             }
         } catch (error) {
             console.error(error);
-            alert('Signup failed. Please try again.');
+            alert('Signup failed. Please try again with a different username or email.');
         }
     };
 
@@ -83,24 +83,22 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    let logoutUser = (e) => {
+    let logoutUser = useCallback((e) => {
         if (e) e.preventDefault();
         localStorage.removeItem('authTokens');
         localStorage.removeItem('loggedIn');
         setAuthTokens(null);
         setUser(null);
         navigate('/');
-    };
+    }, [navigate]);
 
-    const updateToken = async () => {
+    const updateToken = useCallback(async () => {
         try {
+            const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+            const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const response = await api.post('/api/accounts/token/refresh/', {
                 refresh: authTokens?.refresh
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            }, {headers});
 
             const data = response.data;
             if (response.status === 200) {
@@ -119,7 +117,7 @@ export const AuthProvider = ({children}) => {
             setLoading(false);
         }
 
-    };
+    }, [authTokens?.refresh, loading, logoutUser]);
 
 
     let contextData = {
@@ -131,9 +129,9 @@ export const AuthProvider = ({children}) => {
     };
 
     useEffect(() => {
-        // if (loading && authTokens) {
-        //     updateToken()
-        // }
+        if (loading && authTokens) {
+            updateToken()
+        }
 
         const REFRESH_INTERVAL = 1000 * 60 * 4 // 4 minutes
         let interval = setInterval(() => {
@@ -143,7 +141,7 @@ export const AuthProvider = ({children}) => {
         }, REFRESH_INTERVAL)
         return () => clearInterval(interval)
 
-    }, [authTokens, loading])
+    }, [authTokens, loading, updateToken])
 
     return (
         <AuthContext.Provider value={contextData}>

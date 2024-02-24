@@ -1,11 +1,11 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import api from "../utils/api";
 
-const useFetchData = (endpoint, requiresAuth = false) => {
+const useFetchData = (endpoint) => {
     const [dataList, setDataList] = useState([]);
     const [error, setError] = useState(null);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
@@ -16,11 +16,11 @@ const useFetchData = (endpoint, requiresAuth = false) => {
             setError(err);
             console.error("Failed to fetch data:", err);
         }
-    };
+    }, [endpoint]);
 
     useEffect(() => {
         fetchData();
-    }, [endpoint]);
+    }, [fetchData]);
 
     return {dataList, fetchData, error};
 };

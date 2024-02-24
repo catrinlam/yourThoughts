@@ -73,7 +73,7 @@ const FeedbackForm = () => {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             await api.post('/api/newfeedback/', feedback, {headers});
-            navigate('/');
+            navigate('/results/');
             alert('Feedback submitted successfully');
         } catch (error) {
             console.error(error);
