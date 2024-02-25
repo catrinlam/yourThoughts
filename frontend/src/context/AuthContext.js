@@ -8,8 +8,8 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({children}) => {
-    let [user, setUser] = useState(() => (localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null))
-    let [authTokens, setAuthTokens] = useState(() => (localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null))
+    let [user, setUser] = useState(() => (sessionStorage.getItem('authTokens') ? jwtDecode(sessionStorage.getItem('authTokens')) : null))
+    let [authTokens, setAuthTokens] = useState(() => (sessionStorage.getItem('authTokens') ? JSON.parse(sessionStorage.getItem('authTokens')) : null))
     let [loading, setLoading] = useState(true)
 
     const navigate = useNavigate();
@@ -67,12 +67,12 @@ export const AuthProvider = ({children}) => {
             let data = response.data;
 
             if (data) {
-                localStorage.setItem('authTokens', JSON.stringify(data));
+                sessionStorage.setItem('authTokens', JSON.stringify(data));
                 setAuthTokens(data);
                 let decodedUser = jwtDecode(data.access);
                 setUser(decodedUser);
                 console.log(decodedUser);
-                localStorage.setItem('loggedIn', true)
+                sessionStorage.setItem('loggedIn', true)
                 navigate('/results');
             } else {
                 alert('Something went wrong while logging in the user. The username or passoword may be wrong. Please try again.');
@@ -85,8 +85,8 @@ export const AuthProvider = ({children}) => {
 
     let logoutUser = useCallback((e) => {
         if (e) e.preventDefault();
-        localStorage.removeItem('authTokens');
-        localStorage.removeItem('loggedIn');
+        sessionStorage.removeItem('authTokens');
+        sessionStorage.removeItem('loggedIn');
         setAuthTokens(null);
         setUser(null);
         navigate('/');
@@ -94,7 +94,7 @@ export const AuthProvider = ({children}) => {
 
     const updateToken = useCallback(async () => {
         try {
-            const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+            const authTokens = JSON.parse(sessionStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const response = await api.post('/api/accounts/token/refresh/', {
                 refresh: authTokens?.refresh
@@ -104,7 +104,7 @@ export const AuthProvider = ({children}) => {
             if (response.status === 200) {
                 setAuthTokens(data);
                 setUser(jwtDecode(data.access));
-                localStorage.setItem('authTokens', JSON.stringify(data));
+                sessionStorage.setItem('authTokens', JSON.stringify(data));
             } else {
                 logoutUser();
             }
