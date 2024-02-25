@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -15,6 +15,9 @@ import AdminDashboard from "./components/AdminDashboard";
 import {AuthProvider} from './context/AuthContext';
 
 function App() {
+    // useEffect(() => {
+    //     localStorage.clear();
+    // }, []);
 
     return (
         <div className="App d-flex flex-column min-vh-100">
