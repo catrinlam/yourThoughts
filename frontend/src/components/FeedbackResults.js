@@ -8,7 +8,6 @@ function FeedbackResults() {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
-    // const options = moduleList.map(module => ({value: module.code, label: module.title}));
     const [filterValue, setFilterValue] = useState('');
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);

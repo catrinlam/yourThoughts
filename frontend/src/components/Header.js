@@ -30,14 +30,6 @@ function Header() {
                         <Nav.Link href='/results'>Results</Nav.Link>
                         {initialLoggedIn && !isAdmin && <Nav.Link href="/feedback"> Write a Feedback</Nav.Link>}
                         {isAdmin && <Nav.Link href="/admin">Admin Dashboard</Nav.Link>}
-                        {/*<Button onClick={toggleTheme} className="btn btn-link border-0" style={{backgroundColor: 'transparent'}} aria-label="Toggle theme">*/}
-                        {/*    {theme === 'light' ? (*/}
-                        {/*        <i className="bi bi-moon"/>*/}
-                        {/*    ) : (*/}
-                        {/*        <span className="bi-sun"></span>*/}
-                        {/*    )}*/}
-                        {/*</Button>*/}
-                        {/*<Button variant="info" onClick={toggleTheme}>Toggle Theme</Button>*/}
                         {user ? (
                             <Button variant="danger" onClick={logoutUser}>Logout</Button>
                         ) : (
