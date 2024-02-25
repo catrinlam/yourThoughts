@@ -1,6 +1,5 @@
 import React, {useState, useMemo, useContext, useEffect} from 'react'
-import Select from 'react-select'
-import {Accordion, Card, ListGroup, ListGroupItem, Alert} from 'react-bootstrap';
+import {Form, Dropdown, Accordion, Card, ListGroup, ListGroupItem, Alert} from 'react-bootstrap';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
@@ -9,11 +8,16 @@ function FeedbackResults() {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
-    const options = moduleList.map(module => ({value: module.code, label: module.title}));
+    // const options = moduleList.map(module => ({value: module.code, label: module.title}));
+    const [filterValue, setFilterValue] = useState('');
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);
     const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [summary, setSummary] = useState(null);
+
+    const filteredModules = moduleList.filter(module =>
+        module.title.toLowerCase().includes(filterValue.toLowerCase())
+    );
 
     useEffect(() => {
         if (academicYearsList.length > 0) {
@@ -23,14 +27,14 @@ function FeedbackResults() {
         }
     }, [academicYearsList]);
 
-    const handleChange = async selectedOption => {
-        setSelectedModule(selectedOption);
+    const handleChangeModule = async (selectedModuleCode) => {
+        setFilterValue('');
+        const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
+        setSelectedModule(selectedModule);
         const authTokens = JSON.parse(localStorage.getItem('authTokens'));
         const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-        const response = await api.get(`/api/feedback/${selectedOption.value}`, {headers});
-        const summary = await api.get(`/api/summarize-feedback/${selectedOption.value}/${selectedAcademicYear.label}`, {headers});
-        console.log(response.data);
-        console.log(summary.data);
+        const response = await api.get(`/api/feedback/${selectedModule.code}`, {headers});
+        const summary = await api.get(`/api/summarize-feedback/${selectedModule.code}/${selectedAcademicYear.label}`, {headers});
         setModuleResults(response.data);
         setSummary(summary.data);
     };
@@ -72,10 +76,28 @@ function FeedbackResults() {
     return (
         <div className="container mt-4">
             <h2 className="mb-3">Module Survey Results</h2>
-            <Select options={options} onChange={handleChange}
-                    className="mb-4"
-                    placeholder="Select a module..."
-            />
+            <Dropdown className="mb-3" onSelect={handleChangeModule}>
+                <Dropdown.Toggle variant="secondary" id="dropdown-module-select">
+                    {selectedModule ? selectedModule.title : "Select a module..."}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+
+                    <Form.Control
+                        autoFocus
+                        className="mx-3 my-2 w-auto"
+                        placeholder="Search for a module..."
+                        onChange={(e) => setFilterValue(e.target.value)}
+                        value={filterValue}
+                    />
+
+                    {filteredModules.map(module => (
+                        <Dropdown.Item key={module.code} eventKey={module.code}>
+                            {module.title}
+                        </Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
             {
                 moduleResults && (
                     <Card>
@@ -132,57 +154,3 @@ function FeedbackResults() {
 }
 
 export default FeedbackResults;
-
-
-//     <div className="container mt-4">
-//         <h2 className="mb-3">Module Survey Results:</h2>
-//          <Select options={options} onChange={handleChange}
-
-//             className="mb-4"
-//             placeholder="Select a module..."
-//     />
-//     {moduleResults && (
-//         <Accordion defaultActiveKey="0">
-//             <Card>
-//                 <Accordion.Toggle as={Card.Header} eventKey="0">
-//                     <h5>Material Feedback</h5>
-//                 </Accordion.Toggle>
-//                 <Accordion.Collapse eventKey="0">
-//                     <ListGroup variant="flush">
-//                         <ListGroupItem>
-//                             <strong>Material Ratings</strong>
-//                             <ProgressBar now={convertToPercentage(materialRatingAvg)}
-//                                          label={`${materialRatingAvg}/5`}/>
-//                         </ListGroupItem>
-//                         <ListGroupItem>
-//                             <strong>Material Feedbacks</strong>
-//                             <p><strong>Summary:</strong> {summary.summary_material}</p>
-//                             {renderFeedbackItems(moduleResults.map(result => result.materialFeedback), 'Feedback', summary.summary_material)}
-//                         </ListGroupItem>
-//                     </ListGroup>
-//                 </Accordion.Collapse>
-//             </Card>
-//             {user && (
-//                 <Card>
-//                     <Accordion.Toggle as={Card.Header} eventKey="1">
-//                         <h5>Lecturer Feedback</h5>
-//                     </Accordion.Toggle>
-//                     <Accordion.Collapse eventKey="1">
-//                         <ListGroup variant="flush">
-//                             <ListGroupItem>
-//                                 <strong>Lecturer Ratings</strong>
-//                                 <ProgressBar now={convertToPercentage(lecturerRatingAvg)}
-//                                              label={`${lecturerRatingAvg}/5`}/>
-//                             </ListGroupItem>
-//                             <ListGroupItem>
-//                                 <strong>Lecturer Feedbacks</strong>
-//                                 <p><strong>Summary:</strong> {summary.summary_lecturer}</p>
-//                                 {renderFeedbackItems(moduleResults.map(result => result.lecturerFeedback), 'Feedback', summary.summary_lecturer)}
-//                             </ListGroupItem>
-//                         </ListGroup>
-//                     </Accordion.Collapse>
-//                 </Card>
-//             )}
-//         </Accordion>
-//     )}
-// </div>
