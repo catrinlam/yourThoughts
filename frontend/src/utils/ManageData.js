@@ -38,6 +38,7 @@ const ManageModels = ({
             await fetchItems();
             setShowForm(false);
             setEditItemId(null);
+            setFormData({});
         } catch (e) {
             console.error(e);
         }
