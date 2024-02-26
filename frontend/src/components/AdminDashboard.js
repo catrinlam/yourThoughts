@@ -13,8 +13,6 @@ const AdminDashboard = () => {
     const {dataList: feedbackList, fetchData: fetchFeedbacks} = useFetchData('/api/feedbacks/');
     const {dataList: userList, fetchData: fetchUsers} = useFetchData('/api/accounts/users/');
 
-    console.log(academicYearsList)
-
     return (
         <div>
             <h1>Admin Dashboard</h1>

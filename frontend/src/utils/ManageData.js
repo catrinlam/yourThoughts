@@ -34,7 +34,6 @@ const ManageModels = ({
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const endpoint = editItemId ? apiEndpoints.edit(editItemId) : apiEndpoints.create;
             const response = await api[editItemId ? 'put' : 'post'](endpoint, formData, {headers});
-            console.log(response);
             await fetchItems();
             setShowForm(false);
             setEditItemId(null);
@@ -53,13 +52,9 @@ const ManageModels = ({
     const handleDelete = async (id) => {
         if (window.confirm(`Are you sure you want to delete this ${itemDescriptor.toLowerCase()}?`)) {
             try {
-                console.log("Deleting item with ID", id);
                 const authTokens = JSON.parse(localStorage.getItem('authTokens'));
                 const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
                 const response = await api.delete(apiEndpoints.delete(id), {headers});
-                console.log("auth", authTokens);
-                console.log("headers: ",headers);
-                console.log(response);
                 await fetchItems();
             } catch (e) {
                 console.error(e);

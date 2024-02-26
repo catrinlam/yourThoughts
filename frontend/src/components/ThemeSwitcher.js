@@ -13,8 +13,6 @@ function ThemeSwitcher() {
     };
 
     useEffect(() => {
-        console.log("Current theme:", currentTheme);
-        console.log("Theme mode:", themeMode);
         if (themeMode === 'auto' && localStorage.getItem("theme") === 'undefined') {
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             applyTheme(prefersDarkMode ? 'dark' : 'light');

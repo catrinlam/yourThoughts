@@ -29,7 +29,6 @@ export const AuthProvider = ({children}) => {
                 }
             });
             if (signupResponse.data) {
-                console.log(signupResponse.data);
 
                 const fakeEvent = {
                     preventDefault: () => {
@@ -71,7 +70,6 @@ export const AuthProvider = ({children}) => {
                 setAuthTokens(data);
                 let decodedUser = jwtDecode(data.access);
                 setUser(decodedUser);
-                console.log(decodedUser);
                 localStorage.setItem('loggedIn', true);
                 navigate('/results');
             } else {

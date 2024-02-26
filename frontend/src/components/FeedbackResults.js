@@ -113,7 +113,7 @@ function FeedbackResults() {
                                         <ListGroupItem>
                                             <strong>Material Feedbacks</strong>
                                             <br/>
-                                            <strong>Summary:</strong>
+                                            <p>Summary:</p>
                                             <p>{summary.summary_material}</p>
                                             {renderFeedbackItems(moduleResults.map(result => result.materialFeedback), 'Feedback')}
                                         </ListGroupItem>
@@ -134,7 +134,8 @@ function FeedbackResults() {
                                                 </ListGroupItem>
                                                 <ListGroupItem>
                                                     <strong>Lecturer Feedbacks</strong>
-                                                    <strong>Summary:</strong>
+                                                    <br/>
+                                                    <p>Summary:</p>
                                                     <p>{summary.summary_lecturer}</p>
                                                     {renderFeedbackItems(moduleResults.map(result => result.lecturerFeedback), 'Feedback')}
                                                 </ListGroupItem>
