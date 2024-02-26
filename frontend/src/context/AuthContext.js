@@ -72,7 +72,7 @@ export const AuthProvider = ({children}) => {
                 let decodedUser = jwtDecode(data.access);
                 setUser(decodedUser);
                 console.log(decodedUser);
-                localStorage.setItem('loggedIn', true)
+                localStorage.setItem('loggedIn', true);
                 navigate('/results');
             } else {
                 alert('Something went wrong while logging in the user. The username or passoword may be wrong. Please try again.');

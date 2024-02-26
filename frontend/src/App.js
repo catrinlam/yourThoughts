@@ -15,9 +15,6 @@ import AdminDashboard from "./components/AdminDashboard";
 import {AuthProvider} from './context/AuthContext';
 
 function App() {
-    // useEffect(() => {
-    //     localStorage.clear();
-    // }, []);
 
     return (
         <div className="App d-flex flex-column min-vh-100">

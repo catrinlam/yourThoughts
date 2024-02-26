@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import AuthContext from "../context/AuthContext";
 function Header() {
     let {user, logoutUser} = useContext(AuthContext)
-    const loggedIn = sessionStorage.getItem('loggedIn');
+    const loggedIn = localStorage.getItem('loggedIn');
     const initialLoggedIn = loggedIn === 'true';
     const isAdmin = user ? user.is_staff : false;
 
