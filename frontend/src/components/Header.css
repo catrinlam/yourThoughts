@@ -1,18 +1,18 @@
-ul {
-  list-style: none;
-  padding: 0;
-}
+/*ul {*/
+/*  list-style: none;*/
+/*  padding: 0;*/
+/*}*/
 
-li {
-  margin-bottom: 10px;
-    color: #FFFFFF;
-}
+/*li {*/
+/*  margin-bottom: 10px;*/
+/*    color: #FFFFFF;*/
+/*}*/
 
-a {
-  text-decoration: none;
-  color: #FFFFFF;
-  margin-right: 20px;
-}
+/*a {*/
+/*  text-decoration: none;*/
+/*  color: #FFFFFF;*/
+/*  margin-right: 20px;*/
+/*}*/
 
 .navbar {
   margin-bottom: 5%;
@@ -23,10 +23,29 @@ a {
   margin-right: auto !important;
 }
 
-.nav-link {
-  font-size: 20px; /* Adjust size as needed */
-  margin-left: auto !important;
-}
+/*@media (max-width: 991px) { !* Adjust the max-width according to your navbar's breakpoint *!*/
+/*  .navbar-collapse {*/
+/*    justify-content: flex-end;*/
+/*  }*/
+/*}*/
+
+
+/*.nav-link{*/
+/*  font-size: 20px; !* Adjust size as needed *!*/
+/*  margin-left: auto !important;*/
+/*}*/
+
+/*.navbar .dropdown-menu a {*/
+/*    font-size: 20px; !* Adjust size as needed *!*/
+/*    margin-left: auto !important;*/
+/*}*/
+
+/*.custom-dropdown-menu {*/
+/*    max-width: 100vw; !* Prevents the dropdown from exceeding the viewport width *!*/
+/*    overflow: hidden; !* Prevents content from overflowing *!*/
+/*    text-overflow: ellipsis; !* Adds an ellipsis to overflowing text *!*/
+/*    white-space: nowrap; !* Keeps the dropdown items in a single line *!*/
+/*}*/
 
 /*div{*/
 /*    background-color: #0f0f0f;*/

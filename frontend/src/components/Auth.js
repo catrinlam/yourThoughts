@@ -42,6 +42,7 @@ const AuthPage = () => {
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text" placeholder="Username"
                                           onChange={(e) => setUsername(e.target.value)} name="username"/>
+                            <small>150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
                         </Form.Group>
                         <Form.Group className="mb-2">
                             <Form.Label>Email Address</Form.Label>

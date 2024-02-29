@@ -8,14 +8,14 @@ function FeedbackResults() {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
-    const [filterValue, setFilterValue] = useState('');
+    const [filterModuleValue, setfilterModuleValue] = useState('');
     const [selectedModule, setSelectedModule] = useState(null);
     const [moduleResults, setModuleResults] = useState(null);
     const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [summary, setSummary] = useState(null);
 
     const filteredModules = moduleList.filter(module =>
-        module.title.toLowerCase().includes(filterValue.toLowerCase())
+        module.title.toLowerCase().includes(filterModuleValue.toLowerCase())
     );
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function FeedbackResults() {
     }, [academicYearsList]);
 
     const handleChangeModule = async (selectedModuleCode) => {
-        setFilterValue('');
+        setfilterModuleValue('');
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
         const authTokens = JSON.parse(localStorage.getItem('authTokens'));
@@ -86,8 +86,8 @@ function FeedbackResults() {
                         autoFocus
                         className="mx-3 my-2 w-auto"
                         placeholder="Search for a module..."
-                        onChange={(e) => setFilterValue(e.target.value)}
-                        value={filterValue}
+                        onChange={(e) => setfilterModuleValue(e.target.value)}
+                        value={filterModuleValue}
                     />
 
                     {filteredModules.map(module => (
@@ -100,7 +100,7 @@ function FeedbackResults() {
             {
                 moduleResults && (
                     <Card>
-                        <Card.Header as="h3">Results for {selectedModule.label}</Card.Header>
+                        <Card.Header as="h3">Results for {selectedModule.title}</Card.Header>
                         <Accordion defaultActiveKey="0">
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>Material</Accordion.Header>

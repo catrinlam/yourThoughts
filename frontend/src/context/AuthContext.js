@@ -70,7 +70,6 @@ export const AuthProvider = ({children}) => {
                 setAuthTokens(data);
                 let decodedUser = jwtDecode(data.access);
                 setUser(decodedUser);
-                localStorage.setItem('loggedIn', true);
                 navigate('/results');
             } else {
                 alert('Something went wrong while logging in the user. The username or passoword may be wrong. Please try again.');
@@ -84,7 +83,6 @@ export const AuthProvider = ({children}) => {
     let logoutUser = useCallback((e) => {
         if (e) e.preventDefault();
         localStorage.removeItem('authTokens');
-        localStorage.removeItem('loggedIn');
         setAuthTokens(null);
         setUser(null);
         navigate('/');

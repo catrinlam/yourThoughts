@@ -6,9 +6,9 @@ const Footer = () => {
 
     return (
         <Container>
-            <footer className="py-3 my-4">
+            <footer>
                 <Nav className="justify-content-center border-bottom pb-3 mb-3">
-                    <Nav.Item>Developed by <a href="https://your-link-here.com" className="text-primary" target="_blank"
+                    <Nav.Item>Developed by <a href="https://github.com/winter7eaf" className="text-primary" target="_blank"
                                               rel="noopener noreferrer">Cheuk Yu Lam</a></Nav.Item>
                     <Nav.Item>Source code available on <a href="https://git.cs.bham.ac.uk/projects-2023-24/cxl031"
                                                           className="text-primary"

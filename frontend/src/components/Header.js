@@ -1,15 +1,11 @@
 import React, {useContext} from "react";
 import './Header.css';
 
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
+import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import AuthContext from "../context/AuthContext";
+
 function Header() {
     let {user, logoutUser} = useContext(AuthContext)
-    const loggedIn = localStorage.getItem('loggedIn');
-    const initialLoggedIn = loggedIn === 'true';
     const isAdmin = user ? user.is_staff : false;
 
     return (
@@ -25,17 +21,17 @@ function Header() {
                     />{' '}
                     YourThoughts</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                    <Nav>
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto">
                         <Nav.Link href='/results'>Results</Nav.Link>
-                        {initialLoggedIn && !isAdmin && <Nav.Link href="/feedback"> Write a Feedback</Nav.Link>}
+                        {user && !isAdmin && <Nav.Link href="/feedback"> Write a Feedback</Nav.Link>}
                         {isAdmin && <Nav.Link href="/admin">Admin Dashboard</Nav.Link>}
-                        {user ? (
-                            <Button variant="danger" onClick={logoutUser}>Logout</Button>
-                        ) : (
-                            <Button variant="info" href="/auth">Sign in/Sign up</Button>
+                        {!user && <Nav.Link href="/auth">Sign in/Sign up</Nav.Link>}
+                        {user && (
+                            <NavDropdown title={`Hi, ${user.username}!`} id="basic-nav-dropdown">
+                                <NavDropdown.Item onClick={logoutUser}>Log out</NavDropdown.Item>
+                            </NavDropdown>
                         )}
-                        {user && <Navbar.Text>Hello {user.username}!</Navbar.Text>}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
@@ -44,3 +40,13 @@ function Header() {
 }
 
 export default Header;
+
+// <Dropdown>
+//     <Dropdown.Toggle className="d-block">
+//         {user.username}
+//     </Dropdown.Toggle>
+//     <Dropdown.Menu className="text-small">
+//         <Dropdown.Item>Logout</Dropdown.Item>
+//     </Dropdown.Menu>
+// </Dropdown>
+

@@ -116,11 +116,11 @@ function ThemeSwitcher() {
 
 export default ThemeSwitcher;
 
-                        {/*<Button onClick={toggleTheme} className="btn btn-link border-0" style={{backgroundColor: 'transparent'}} aria-label="Toggle theme">*/}
-                        {/*    {theme === 'light' ? (*/}
-                        {/*        <i className="bi bi-moon"/>*/}
-                        {/*    ) : (*/}
-                        {/*        <span className="bi-sun"></span>*/}
-                        {/*    )}*/}
-                        {/*</Button>*/}
-                        {/*<Button variant="info" onClick={toggleTheme}>Toggle Theme</Button>*/}
+                        // {/*<Button onClick={toggleTheme} className="btn btn-link border-0" style={{backgroundColor: 'transparent'}} aria-label="Toggle theme">*/}
+                        // {/*    {theme === 'light' ? (*/}
+                        // {/*        <i className="bi bi-moon"/>*/}
+                        // {/*    ) : (*/}
+                        // {/*        <span className="bi-sun"></span>*/}
+                        // {/*    )}*/}
+                        // {/*</Button>*/}
+                        // {/*<Button variant="info" onClick={toggleTheme}>Toggle Theme</Button>*/}

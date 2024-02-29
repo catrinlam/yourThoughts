@@ -33,7 +33,7 @@ const ManageModels = ({
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const endpoint = editItemId ? apiEndpoints.edit(editItemId) : apiEndpoints.create;
-            const response = await api[editItemId ? 'put' : 'post'](endpoint, formData, {headers});
+            await api[editItemId ? 'put' : 'post'](endpoint, formData, {headers});
             await fetchItems();
             setShowForm(false);
             setEditItemId(null);
@@ -54,7 +54,7 @@ const ManageModels = ({
             try {
                 const authTokens = JSON.parse(localStorage.getItem('authTokens'));
                 const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
-                const response = await api.delete(apiEndpoints.delete(id), {headers});
+                await api.delete(apiEndpoints.delete(id), {headers});
                 await fetchItems();
             } catch (e) {
                 console.error(e);
@@ -117,10 +117,10 @@ const ManageModels = ({
                             />
                         </Form.Group>
                     ))}
-                    <Button variant="info" onClick={handleCreateOrUpdate}>
+                    <Button className="mt-3" variant="info" onClick={handleCreateOrUpdate}>
                         {editItemId ? 'Update' : 'Create'}
                     </Button>
-                    <Button variant="secondary" onClick={handleCancel} style={{marginLeft: '10px'}}>
+                    <Button className="mt-3" variant="secondary" onClick={handleCancel} style={{marginLeft: '10px'}}>
                         Cancel
                     </Button>
                 </>

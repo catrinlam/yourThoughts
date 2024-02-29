@@ -6,11 +6,13 @@ import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
 import {useNavigate} from 'react-router-dom';
+import {Dropdown} from "react-bootstrap";
 
 const FeedbackForm = () => {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
+    const [filterModuleValue, setfilterModuleValue] = useState('');
     const [academicYear, setAcademicYear] = useState(0);
     const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [materialRating, setMaterialRating] = useState(0);
@@ -21,6 +23,10 @@ const FeedbackForm = () => {
     const [selectedModule, setSelectedModule] = useState(null);
     const [materialRatingError, setMaterialRatingError] = useState('');
     const [lecturerRatingError, setLecturerRatingError] = useState('');
+
+    const filteredModules = moduleList.filter(module =>
+        module.title.toLowerCase().includes(filterModuleValue.toLowerCase())
+    );
 
     const navigate = useNavigate();
 
@@ -34,6 +40,13 @@ const FeedbackForm = () => {
             setSelectedAcademicYear({value: latestYear.id, label: latestYear.year});
         }
     }, [academicYearsList]);
+
+    const handleChangeModule = async (selectedModuleCode) => {
+        setfilterModuleValue('');
+        const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
+        setSelectedModule(selectedModule);
+        setModule(selectedModuleCode.value);
+    };
 
     const handleModuleChange = selectedOption => {
         setSelectedModule(selectedOption);
@@ -84,11 +97,29 @@ const FeedbackForm = () => {
         <h1>Feedback Form</h1>
         <Form.Group className="mb-3">
             <Form.Label>Module</Form.Label>
-            <Select
-                value={selectedModule}
-                onChange={handleModuleChange}
-                options={moduleOptions}
-            />
+            <Dropdown className="mb-3" onSelect={handleChangeModule}>
+                <Dropdown.Toggle variant="secondary" id="dropdown-module-select">
+                    {selectedModule ? selectedModule.title : "Select a module..."}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+
+                    <Form.Control
+                        autoFocus
+                        className="mx-3 my-2 w-auto"
+                        placeholder="Search for a module..."
+                        onChange={(e) => setfilterModuleValue(e.target.value)}
+                        value={filterModuleValue}
+                    />
+
+                    {filteredModules.map(module => (
+                        <Dropdown.Item key={module.code} eventKey={module.code}>
+                            {module.title}
+                        </Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+
             {!selectedModule && <div style={{color: 'red'}}>Please select a module</div>}
         </Form.Group>
 

@@ -8,7 +8,7 @@ const Index = () => {
             <Container className="my-5">
                         <h1>Welcome to Your Thoughts</h1>
                         <p className="lead">
-                            Explore student feedback on university modules to make informed decisions about your
+                            Explore student feedback on university final year modules to make informed decisions about your
                             education.
                         </p>
                         <p>
