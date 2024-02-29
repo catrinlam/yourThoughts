@@ -31,8 +31,6 @@ const FeedbackForm = () => {
 
     const navigate = useNavigate();
 
-    // const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
-
     useEffect(() => {
         if (academicYearsList.length > 0) {
             const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
@@ -46,9 +44,8 @@ const FeedbackForm = () => {
         setfilterModuleValue('');
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
-        setModule(selectedModuleCode.value);
+        setModule(selectedModule.id);
         setLecturersNames(selectedModule.lecturersName);
-        console.log(selectedModule);
     };
 
     // const handleModuleChange = selectedOption => {
@@ -90,7 +87,7 @@ const FeedbackForm = () => {
         const feedback = {
             student: user.studentId,
             academicYear: academicYear,
-            module: selectedModule.id,
+            module: module,
             materialRating,
             materialFeedback: materialReview,
             lecturerRating,
@@ -151,13 +148,13 @@ const FeedbackForm = () => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-            <Form.Label>Lecturer Rating:</Form.Label>
+            <Form.Label>Lecturers Rating :</Form.Label>
             <Form.Control type="number" min="0" max="5" onChange={handleLecturerRatingChange}/>
             <small>Rating must be between 0 and 5</small>
             {lecturerRatingError && <div style={{color: 'red'}}>{lecturerRatingError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
-            <Form.Label>Lecturer Review:</Form.Label>
+            <Form.Label>Lecturers Review:</Form.Label>
             <Form.Control
                 as="textarea"
                 rows={3}
