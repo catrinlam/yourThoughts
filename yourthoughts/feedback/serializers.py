@@ -56,7 +56,7 @@ class AcademicYearSerializer(serializers.ModelSerializer):
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ['id', 'code', 'title']
+        fields = ['id', 'code', 'title', 'lecturersNames']
 
 
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):

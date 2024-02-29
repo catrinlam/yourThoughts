@@ -11,6 +11,7 @@ class AcademicYear(models.Model):
 class Module(models.Model):
     code = models.CharField(max_length=8, unique=True)
     title = models.CharField(max_length=70)
+    lecturersNames = models.CharField(max_length=80, null=True)
 
 class Feedback(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True)

@@ -47,7 +47,7 @@ const AdminDashboard = () => {
                             delete: (id) => `/api/deletemodule/${id}/`,
                             edit: (id) => `/api/editmodule/${id}/`
                         }}
-                        formFields={['id', 'code', 'title']}
+                        formFields={['id', 'code', 'title', 'lecturersNames']}
                         canCreate={isAdmin}
                         canEdit={isAdmin}
                     />

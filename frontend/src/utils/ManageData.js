@@ -44,10 +44,28 @@ const ManageModels = ({
     };
 
     const handleEdit = (item) => {
-        setFormData(formFields.reduce((acc, field) => ({...acc, [field]: item[field]}), {}));
+        console.log(item);
+        // Adjusted to handle nested user object
+        const initialFormData = formFields.reduce((acc, field) => {
+            // Check if the field is nested inside the 'user' object
+            if (item.user && field in item.user) {
+                return {...acc, [field]: item.user[field]};
+            } else {
+                return {...acc, [field]: item[field]};
+            }
+        }, {});
+
+        setFormData(initialFormData);
         setEditItemId(item.id);
         setShowForm(true);
     };
+
+    // const handleEdit = (item) => {
+    //     console.log(item);
+    //     setFormData(formFields.reduce((acc, field) => ({...acc, [field]: item[field]}), {}));
+    //     setEditItemId(item.id);
+    //     setShowForm(true);
+    // };
 
     const handleDelete = async (id) => {
         if (window.confirm(`Are you sure you want to delete this ${itemDescriptor.toLowerCase()}?`)) {
@@ -112,7 +130,7 @@ const ManageModels = ({
                             <Form.Control
                                 type="text"
                                 placeholder={`Enter ${field}`}
-                                value={formData[field]}
+                                value={formData[field] || ''}
                                 onChange={(e) => handleChange(field, e.target.value)}
                             />
                         </Form.Group>

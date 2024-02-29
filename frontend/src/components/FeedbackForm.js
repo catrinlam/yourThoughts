@@ -13,6 +13,7 @@ const FeedbackForm = () => {
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
     const [filterModuleValue, setfilterModuleValue] = useState('');
+    const [lecturersNames, setLecturersNames] = useState([]);
     const [academicYear, setAcademicYear] = useState(0);
     const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [materialRating, setMaterialRating] = useState(0);
@@ -30,7 +31,7 @@ const FeedbackForm = () => {
 
     const navigate = useNavigate();
 
-    const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
+    // const moduleOptions = moduleList.map(mod => ({value: mod.id, label: mod.title}));
 
     useEffect(() => {
         if (academicYearsList.length > 0) {
@@ -46,11 +47,24 @@ const FeedbackForm = () => {
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
         setModule(selectedModuleCode.value);
+        setLecturersNames(selectedModule.lecturersName);
+        console.log(selectedModule);
     };
 
-    const handleModuleChange = selectedOption => {
-        setSelectedModule(selectedOption);
-        setModule(selectedOption.value);
+    // const handleModuleChange = selectedOption => {
+    //     setSelectedModule(selectedOption);
+    //     setModule(selectedOption.value);
+    // };
+
+    const checkReviewForLecturerName = (review, lecturerName) => {
+        // Normalize strings for comparison
+        const normalizedReview = review.toLowerCase();
+        const normalizedLecturerName = lecturerName.toLowerCase().split(' '); // Assuming lecturerName is a full name
+
+        // Check if any part of the lecturer's name is mentioned in the review
+        const nameMentioned = normalizedLecturerName.some(part => normalizedReview.includes(part));
+
+        return nameMentioned;
     };
 
     const validateRating = (rating) => {
@@ -76,12 +90,13 @@ const FeedbackForm = () => {
         const feedback = {
             student: user.studentId,
             academicYear: academicYear,
-            module: module,
+            module: selectedModule.id,
             materialRating,
             materialFeedback: materialReview,
             lecturerRating,
             lecturerFeedback: lecturerReview,
         };
+        console.log(feedback);
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
@@ -142,7 +157,7 @@ const FeedbackForm = () => {
             {lecturerRatingError && <div style={{color: 'red'}}>{lecturerRatingError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
-        <Form.Label>Lecturer Review:</Form.Label>
+            <Form.Label>Lecturer Review:</Form.Label>
             <Form.Control
                 as="textarea"
                 rows={3}
