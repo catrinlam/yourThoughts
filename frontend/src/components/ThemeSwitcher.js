@@ -13,7 +13,7 @@ function ThemeSwitcher() {
     };
 
     useEffect(() => {
-        if (themeMode === 'auto' && localStorage.getItem("theme") === 'undefined') {
+        if (themeMode === 'auto' && localStorage.getItem("theme") !== 'light' && localStorage.getItem("theme") !== 'dark') {
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             applyTheme(prefersDarkMode ? 'dark' : 'light');
         } else {
