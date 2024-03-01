@@ -1,21 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Select from 'react-select'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
 import {useNavigate} from 'react-router-dom';
-import {Dropdown} from "react-bootstrap";
+import {Button, Dropdown, Form} from "react-bootstrap";
+
 
 const FeedbackForm = () => {
     const {user} = useContext(AuthContext);
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
     const [filterModuleValue, setfilterModuleValue] = useState('');
-    const [lecturersNames, setLecturersNames] = useState([]);
+    const [lecturersNames, setLecturersNames] = useState('');
     const [academicYear, setAcademicYear] = useState(0);
-    const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
     const [materialRating, setMaterialRating] = useState(0);
     const [materialReview, setMaterialReview] = useState('');
     const [lecturerRating, setLecturerRating] = useState(0);
@@ -24,6 +21,7 @@ const FeedbackForm = () => {
     const [selectedModule, setSelectedModule] = useState(null);
     const [materialRatingError, setMaterialRatingError] = useState('');
     const [lecturerRatingError, setLecturerRatingError] = useState('');
+    const [lecturersNamesError, setLecturersNamesError] = useState('');
 
     const filteredModules = moduleList.filter(module =>
         module.title.toLowerCase().includes(filterModuleValue.toLowerCase())
@@ -36,7 +34,6 @@ const FeedbackForm = () => {
             const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
             const latestYear = sortedYears[0];
             setAcademicYear(latestYear.id); // Assuming you're using the ID as the value
-            setSelectedAcademicYear({value: latestYear.id, label: latestYear.year});
         }
     }, [academicYearsList]);
 
@@ -45,24 +42,31 @@ const FeedbackForm = () => {
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
         setModule(selectedModule.id);
-        setLecturersNames(selectedModule.lecturersName);
+        setLecturersNames(selectedModule.lecturersNames.includes(',') ? selectedModule.lecturersNames.split(', ') : [selectedModule.lecturersNames]);
     };
 
-    // const handleModuleChange = selectedOption => {
-    //     setSelectedModule(selectedOption);
-    //     setModule(selectedOption.value);
-    // };
-
-    const checkReviewForLecturerName = (review, lecturerName) => {
-        // Normalize strings for comparison
+    const checkReviewForLecturerName = (review) => {
+        const namesArray = typeof lecturersNames === 'string' ? lecturersNames.split(', ') : lecturersNames;
+        console.log(namesArray);
         const normalizedReview = review.toLowerCase();
-        const normalizedLecturerName = lecturerName.toLowerCase().split(' '); // Assuming lecturerName is a full name
 
-        // Check if any part of the lecturer's name is mentioned in the review
-        const nameMentioned = normalizedLecturerName.some(part => normalizedReview.includes(part));
-
-        return nameMentioned;
+        return namesArray.some(name => {
+            const parts = name.toLowerCase().split(' ');
+            return parts.some(part => normalizedReview.includes(part));
+        });
     };
+
+    const handleLecturerReviewChange = (e) => {
+        const review = e.target.value;
+        setLecturerReview(review);
+        const nameMentioned = checkReviewForLecturerName(review);
+        console.log(nameMentioned);
+        if (nameMentioned) {
+            setLecturersNamesError("Review cannot include the lecturer's name.");
+        } else {
+            setLecturersNamesError("");
+        }
+    }
 
     const validateRating = (rating) => {
         const numRating = Number(rating);
@@ -81,7 +85,7 @@ const FeedbackForm = () => {
         setLecturerRatingError(validateRating(rating) ? '' : 'Rating must be between 0 and 5');
     };
 
-    const isSubmitDisabled = !validateRating(materialRating) || !validateRating(lecturerRating) || !selectedModule;
+    const isSubmitDisabled = !selectedModule || !validateRating(materialRating) || !validateRating(lecturerRating) || !lecturerReview || lecturersNamesError;
 
     const handleSubmit = async () => {
         const feedback = {
@@ -137,6 +141,10 @@ const FeedbackForm = () => {
 
         <Form.Group className="mb-3">
             <Form.Label>Material Rating:</Form.Label>
+            {/*<RangeSlider*/}
+            {/*    value={materialRating}*/}
+            {/*    onChange={handleMaterialRatingChange}*/}
+            {/*/>*/}
             <Form.Control type="number" min="0" max="5" onChange={handleMaterialRatingChange}/>
             <small>Rating must be between 0 and 5</small>
             {materialRatingError && <div style={{color: 'red'}}>{materialRatingError}</div>}
@@ -159,8 +167,9 @@ const FeedbackForm = () => {
                 as="textarea"
                 rows={3}
                 value={lecturerReview}
-                onChange={e => setLecturerReview(e.target.value)}
+                onChange={handleLecturerReviewChange}
             />
+            {lecturersNamesError && <div style={{color: 'red'}}>{lecturersNamesError}</div>}
         </Form.Group>
         <Button variant="info" disabled={isSubmitDisabled} onClick={handleSubmit}>
             Submit
