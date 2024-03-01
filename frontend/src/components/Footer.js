@@ -7,10 +7,10 @@ const Footer = () => {
     return (
         <Container>
             <footer>
-                <Nav className="justify-content-center border-bottom pb-3 mb-3">
-                    <Nav.Item>Developed by <a href="https://github.com/winter7eaf" className="text-primary" target="_blank"
+                <Nav className="justify-content-center border-bottom pb-3 mb-3 mt-3">
+                    <Nav.Item className="pe-3">Developed by <a href="https://github.com/winter7eaf" className="text-primary" target="_blank"
                                               rel="noopener noreferrer">Cheuk Yu Lam</a></Nav.Item>
-                    <Nav.Item>Source code available on <a href="https://git.cs.bham.ac.uk/projects-2023-24/cxl031"
+                    <Nav.Item className="pe-3">Source code available on <a href="https://git.cs.bham.ac.uk/projects-2023-24/cxl031"
                                                           className="text-primary"
                                                           target="_blank"
                                                           rel="noopener noreferrer">GitLab</a></Nav.Item>

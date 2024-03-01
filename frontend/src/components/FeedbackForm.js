@@ -3,7 +3,8 @@ import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
 import {useNavigate} from 'react-router-dom';
-import {Button, Dropdown, Form} from "react-bootstrap";
+import {Button, Dropdown, Form, Col, Row} from "react-bootstrap";
+import RangeSlider from 'react-bootstrap-range-slider';
 
 
 const FeedbackForm = () => {
@@ -19,9 +20,9 @@ const FeedbackForm = () => {
     const [lecturerReview, setLecturerReview] = useState('');
     const [module, setModule] = useState('');
     const [selectedModule, setSelectedModule] = useState(null);
-    const [materialRatingError, setMaterialRatingError] = useState('');
-    const [lecturerRatingError, setLecturerRatingError] = useState('');
+    const [moduleError, setModuleError] = useState("");
     const [lecturersNamesError, setLecturersNamesError] = useState('');
+    const [formError, setFormError] = useState('');
 
     const filteredModules = moduleList.filter(module =>
         module.title.toLowerCase().includes(filterModuleValue.toLowerCase())
@@ -38,6 +39,7 @@ const FeedbackForm = () => {
     }, [academicYearsList]);
 
     const handleChangeModule = async (selectedModuleCode) => {
+        setModuleError('');
         setfilterModuleValue('');
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
@@ -46,7 +48,7 @@ const FeedbackForm = () => {
     };
 
     const checkReviewForLecturerName = (review) => {
-        const namesArray = typeof lecturersNames === 'string' ? lecturersNames.split(', ') : lecturersNames;
+        const namesArray = Array.isArray(lecturersNames) ? lecturersNames : [lecturersNames];
         console.log(namesArray);
         const normalizedReview = review.toLowerCase();
 
@@ -56,38 +58,43 @@ const FeedbackForm = () => {
         });
     };
 
-    const handleLecturerReviewChange = (e) => {
-        const review = e.target.value;
-        setLecturerReview(review);
-        const nameMentioned = checkReviewForLecturerName(review);
-        console.log(nameMentioned);
-        if (nameMentioned) {
-            setLecturersNamesError("Review cannot include the lecturer's name.");
-        } else {
-            setLecturersNamesError("");
-        }
+    const handleMaterialRatingChange = (e) => {
+        const value = e.target.value;
+        setMaterialRating(value);
+        setFormError('');
     }
 
-    const validateRating = (rating) => {
-        const numRating = Number(rating);
-        return numRating >= 0 && numRating <= 5;
-    };
-
-    const handleMaterialRatingChange = (e) => {
-        const rating = e.target.value;
-        setMaterialRating(rating);
-        setMaterialRatingError(validateRating(rating) ? '' : 'Rating must be between 0 and 5');
-    };
+    const handleMaterialReviewChange = (e) => {
+        const value = e.target.value;
+        setMaterialReview(value);
+        setFormError('');
+    }
 
     const handleLecturerRatingChange = (e) => {
-        const rating = e.target.value;
-        setLecturerRating(rating);
-        setLecturerRatingError(validateRating(rating) ? '' : 'Rating must be between 0 and 5');
-    };
+        const value = e.target.value;
+        setLecturerRating(value);
+        setFormError('');
+    }
 
-    const isSubmitDisabled = !selectedModule || !validateRating(materialRating) || !validateRating(lecturerRating) || !lecturerReview || lecturersNamesError;
+    const handleLecturerReviewChange = (e) => {
+        const review = e.target.value;
+        setFormError('');
+        setLecturerReview(review);
+        const nameMentioned = checkReviewForLecturerName(review);
+        setLecturersNamesError(nameMentioned ? 'Review cannot include the lecturer\'s name.' : '');
+    }
 
     const handleSubmit = async () => {
+        if (!selectedModule) {
+            setModuleError("Please select a module before submitting.");
+            return; // Stop the function execution if no module is selected
+        }else (setModuleError(""));
+
+        if(!materialRating && !lecturerRating && !materialReview && !lecturerReview){
+            setFormError("Please fill in the form before submitting.");
+            return;
+        }else (setFormError(""));
+
         const feedback = {
             student: user.studentId,
             academicYear: academicYear,
@@ -109,72 +116,94 @@ const FeedbackForm = () => {
         }
     };
 
-    return (<Form>
-        <h1>Feedback Form</h1>
-        <Form.Group className="mb-3">
-            <Form.Label>Module</Form.Label>
-            <Dropdown className="mb-3" onSelect={handleChangeModule}>
-                <Dropdown.Toggle variant="secondary" id="dropdown-module-select">
-                    {selectedModule ? selectedModule.title : "Select a module..."}
-                </Dropdown.Toggle>
+    return (
+        <Form>
+            <h1>Feedback Form</h1>
+            <Form.Group className="mb-3">
+                <Form.Label>Module</Form.Label>
+                <Dropdown className="mb-3" onSelect={handleChangeModule}>
+                    <Dropdown.Toggle variant="secondary" id="dropdown-module-select">
+                        {selectedModule ? selectedModule.title : "Select a module..."}
+                    </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                    <Dropdown.Menu>
+                        <Form.Control
+                            autoFocus
+                            className="mx-3 my-2 w-auto"
+                            placeholder="Search for a module..."
+                            onChange={(e) => setfilterModuleValue(e.target.value)}
+                            value={filterModuleValue}
+                        />
 
-                    <Form.Control
-                        autoFocus
-                        className="mx-3 my-2 w-auto"
-                        placeholder="Search for a module..."
-                        onChange={(e) => setfilterModuleValue(e.target.value)}
-                        value={filterModuleValue}
-                    />
+                        {filteredModules.map(module => (
+                            <Dropdown.Item key={module.code} eventKey={module.code}>
+                                {module.title}
+                            </Dropdown.Item>
+                        ))}
+                    </Dropdown.Menu>
+                </Dropdown>
+                {moduleError && <div style={{color: 'red'}}>{moduleError}</div>}
+            </Form.Group>
 
-                    {filteredModules.map(module => (
-                        <Dropdown.Item key={module.code} eventKey={module.code}>
-                            {module.title}
-                        </Dropdown.Item>
-                    ))}
-                </Dropdown.Menu>
-            </Dropdown>
+            <Form.Group className="mb-3">
+                <Form.Label>Material Rating:</Form.Label>
+                <Row>
+                    <Col>
+                        <RangeSlider
+                            type="range"
+                            onChange={handleMaterialRatingChange}
+                            value={materialRating}
+                            min={0}
+                            max={5}
+                            step={0.25}
+                        />
+                    </Col>
+                    <Col>
+                        <Form.Control value={materialRating} onChange={handleMaterialRatingChange}/>
+                    </Col>
+                </Row>
 
-            {!selectedModule && <div style={{color: 'red'}}>Please select a module</div>}
-        </Form.Group>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Material Review:</Form.Label>
+                <Form.Control as="textarea"
+                              onChange={handleMaterialReviewChange}/>
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-            <Form.Label>Material Rating:</Form.Label>
-            {/*<RangeSlider*/}
-            {/*    value={materialRating}*/}
-            {/*    onChange={handleMaterialRatingChange}*/}
-            {/*/>*/}
-            <Form.Control type="number" min="0" max="5" onChange={handleMaterialRatingChange}/>
-            <small>Rating must be between 0 and 5</small>
-            {materialRatingError && <div style={{color: 'red'}}>{materialRatingError}</div>}
-        </Form.Group>
-        <Form.Group className="mb-3">
-            <Form.Label>Material Review:</Form.Label>
-            <Form.Control as="textarea"
-                          onChange={e => setMaterialReview(e.target.value)}/>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-            <Form.Label>Lecturers Rating :</Form.Label>
-            <Form.Control type="number" min="0" max="5" onChange={handleLecturerRatingChange}/>
-            <small>Rating must be between 0 and 5</small>
-            {lecturerRatingError && <div style={{color: 'red'}}>{lecturerRatingError}</div>}
-        </Form.Group>
-        <Form.Group className="mb-3">
-            <Form.Label>Lecturers Review:</Form.Label>
-            <Form.Control
-                as="textarea"
-                rows={3}
-                value={lecturerReview}
-                onChange={handleLecturerReviewChange}
-            />
-            {lecturersNamesError && <div style={{color: 'red'}}>{lecturersNamesError}</div>}
-        </Form.Group>
-        <Button variant="info" disabled={isSubmitDisabled} onClick={handleSubmit}>
-            Submit
-        </Button>
-    </Form>);
+            <Form.Group className="mb-3">
+                <Form.Label>Lecturers Rating :</Form.Label>
+                <Row>
+                    <Col>
+                        <RangeSlider
+                            type="range"
+                            onChange={handleLecturerRatingChange}
+                            value={lecturerRating}
+                            min={0}
+                            max={5}
+                            step={0.25}
+                        />
+                    </Col>
+                    <Col>
+                        <Form.Control value={lecturerRating} onChange={handleLecturerRatingChange}/>
+                    </Col>
+                </Row>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Lecturers Review:</Form.Label>
+                <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={lecturerReview}
+                    onChange={handleLecturerReviewChange}
+                />
+                {lecturersNamesError && <div style={{color: 'red'}}>{lecturersNamesError}</div>}
+            </Form.Group>
+            {formError && <div style={{color: 'red'}}>{formError}</div>}
+            <Button variant="info" onClick={handleSubmit}>
+                Submit
+            </Button>
+        </Form>
+    );
 };
 
 export default FeedbackForm;

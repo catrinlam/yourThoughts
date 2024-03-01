@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {Table, Form, Button} from 'react-bootstrap';
 import api from "./api";
 
@@ -15,6 +15,7 @@ const ManageModels = ({
     const [formData, setFormData] = useState(formFields.reduce((acc, field) => ({...acc, [field]: ''}), {}));
     const [showForm, setShowForm] = useState(false);
     const [editItemId, setEditItemId] = useState(null);
+    const formRef = useRef(null);
 
     const handleChange = (field, value) => {
         setFormData(prev => ({...prev, [field]: value}));
@@ -45,9 +46,7 @@ const ManageModels = ({
 
     const handleEdit = (item) => {
         console.log(item);
-        // Adjusted to handle nested user object
         const initialFormData = formFields.reduce((acc, field) => {
-            // Check if the field is nested inside the 'user' object
             if (item.user && field in item.user) {
                 return {...acc, [field]: item.user[field]};
             } else {
@@ -58,14 +57,9 @@ const ManageModels = ({
         setFormData(initialFormData);
         setEditItemId(item.id);
         setShowForm(true);
+        formRef.current.scrollIntoView({behavior: 'smooth'});
     };
 
-    // const handleEdit = (item) => {
-    //     console.log(item);
-    //     setFormData(formFields.reduce((acc, field) => ({...acc, [field]: item[field]}), {}));
-    //     setEditItemId(item.id);
-    //     setShowForm(true);
-    // };
 
     const handleDelete = async (id) => {
         if (window.confirm(`Are you sure you want to delete this ${itemDescriptor.toLowerCase()}?`)) {
@@ -84,6 +78,11 @@ const ManageModels = ({
         <div>
             <h2>Manage {itemDescriptor}</h2>
             <div className="table-responsive">
+                {canCreate && !showForm && (
+                    <Button className="mb-3" variant="info" onClick={() => setShowForm(true)}>
+                        {`Create ${itemDescriptor}`}
+                    </Button>
+                )}
                 <Table striped bordered hover>
                     <thead>
                     <tr>
@@ -123,7 +122,7 @@ const ManageModels = ({
             </div>
             {(canCreate || canEdit) && showForm && (
                 <>
-                    <h3>{editItemId ? `Edit ${itemDescriptor}` : `Add a new ${itemDescriptor}`}</h3>
+                    <h3 ref={formRef}>{editItemId ? `Edit ${itemDescriptor}` : `Add a new ${itemDescriptor}`}</h3>
                     {formFields.filter(field => field !== 'id').map(field => (
                         <Form.Group key={field} controlId={field}>
                             <Form.Label>{field.charAt(0).toUpperCase() + field.slice(1)}</Form.Label>
@@ -142,11 +141,6 @@ const ManageModels = ({
                         Cancel
                     </Button>
                 </>
-            )}
-            {canCreate && !showForm && (
-                <Button variant="info" onClick={() => setShowForm(true)}>
-                    {`Create ${itemDescriptor}`}
-                </Button>
             )}
         </div>
     );
