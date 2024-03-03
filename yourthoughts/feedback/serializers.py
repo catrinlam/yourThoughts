@@ -62,48 +62,50 @@ class ModuleSerializer(serializers.ModelSerializer):
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'module', 'materialRating', 'materialFeedback']
+        fields = ['academicYear', 'module', 'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback']
 
 
 class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 
 class AnonymousFeedbackSummarySerializer(serializers.ModelSerializer):
     module = ModuleSerializer(read_only=True)
     academicYear = AcademicYearSerializer(read_only=True)
     summary_material = serializers.CharField()
+    summary_assessment = serializers.CharField()
 
     class Meta:
         model = Feedback
-        fields = ['module', 'academicYear', 'summary_material']
+        fields = ['module', 'academicYear', 'summary_material', 'summary_assessment']
 
 
 class AuthenticatedFeedbackSummarySerializer(serializers.ModelSerializer):
     module = ModuleSerializer(read_only=True)
     academicYear = AcademicYearSerializer(read_only=True)
     summary_material = serializers.CharField()
+    summary_assessment = serializers.CharField()
     summary_lecturer = serializers.CharField()
 
     class Meta:
         model = Feedback
-        fields = ['module', 'academicYear', 'summary_material', 'summary_lecturer']
+        fields = ['module', 'academicYear', 'summary_material', 'summary_assessment', 'summary_lecturer']
 
 
-class MaterialFeedbackSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Feedback
-        fields = ['materialFeedback']
+# class MaterialFeedbackSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Feedback
+#         fields = ['materialFeedback']
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
 
 
 class FeedbackListSerializer(serializers.ModelSerializer):
@@ -113,4 +115,4 @@ class FeedbackListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']

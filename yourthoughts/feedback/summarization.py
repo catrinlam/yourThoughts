@@ -16,6 +16,9 @@ def summarizer(texts):
             continue
         if (token.pos_ in pos_tag):
             keyword.append(token.text)
+            
+    if not keyword:  # Check if keyword list is empty
+        return "No summary available."
 
     freq_word = Counter(keyword)
     # print(freq_word.most_common(5))

@@ -106,7 +106,7 @@ const AdminDashboard = () => {
                             }
                         ]}
                         canCreate={isAdmin}
-                        canEdit={isAdmin}
+                        canEdit={false}
                     />
                 </Tab>
             </Tabs>

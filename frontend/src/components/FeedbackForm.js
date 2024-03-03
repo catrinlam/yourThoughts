@@ -16,6 +16,8 @@ const FeedbackForm = () => {
     const [academicYear, setAcademicYear] = useState(0);
     const [materialRating, setMaterialRating] = useState(0);
     const [materialReview, setMaterialReview] = useState('');
+    const [assessmentRating, setAssessmentRating] = useState(0);
+    const [assessmentReview, setAssessmentReview] = useState('');
     const [lecturerRating, setLecturerRating] = useState(0);
     const [lecturerReview, setLecturerReview] = useState('');
     const [module, setModule] = useState('');
@@ -44,12 +46,16 @@ const FeedbackForm = () => {
         const selectedModule = moduleList.find(module => module.code === selectedModuleCode);
         setSelectedModule(selectedModule);
         setModule(selectedModule.id);
-        setLecturersNames(selectedModule.lecturersNames.includes(',') ? selectedModule.lecturersNames.split(', ') : [selectedModule.lecturersNames]);
+        setLecturersNames(selectedModule.lecturersNames ? (selectedModule.lecturersNames.includes(',') ? selectedModule.lecturersNames.split(', ') : [selectedModule.lecturersNames]) : null);
     };
 
     const checkReviewForLecturerName = (review) => {
+        if (!module) {
+            setModuleError("Please select a module before writing the review.")
+            return false;
+        }
+        if (!lecturersNames) return false;
         const namesArray = Array.isArray(lecturersNames) ? lecturersNames : [lecturersNames];
-        console.log(namesArray);
         const normalizedReview = review.toLowerCase();
 
         return namesArray.some(name => {
@@ -70,6 +76,18 @@ const FeedbackForm = () => {
         setFormError('');
     }
 
+    const handleAssessmentRatingChange = (e) => {
+        const value = e.target.value;
+        setAssessmentRating(value);
+        setFormError('');
+    }
+
+    const handleAssessmentReviewChange = (e) => {
+        const value = e.target.value;
+        setAssessmentReview(value);
+        setFormError('');
+    }
+
     const handleLecturerRatingChange = (e) => {
         const value = e.target.value;
         setLecturerRating(value);
@@ -87,13 +105,13 @@ const FeedbackForm = () => {
     const handleSubmit = async () => {
         if (!selectedModule) {
             setModuleError("Please select a module before submitting.");
-            return; // Stop the function execution if no module is selected
-        }else (setModuleError(""));
+            return;
+        } else (setModuleError(""));
 
-        if(!materialRating && !lecturerRating && !materialReview && !lecturerReview){
+        if (!materialRating && !lecturerRating && !materialReview && !lecturerReview) {
             setFormError("Please fill in the form before submitting.");
             return;
-        }else (setFormError(""));
+        } else (setFormError(""));
 
         const feedback = {
             student: user.studentId,
@@ -101,10 +119,11 @@ const FeedbackForm = () => {
             module: module,
             materialRating,
             materialFeedback: materialReview,
+            assessmentRating,
+            assessmentFeedback: assessmentReview,
             lecturerRating,
             lecturerFeedback: lecturerReview,
         };
-        console.log(feedback);
         try {
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
@@ -168,6 +187,32 @@ const FeedbackForm = () => {
                 <Form.Label>Material Review:</Form.Label>
                 <Form.Control as="textarea"
                               onChange={handleMaterialReviewChange}/>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Assessment Rating:</Form.Label>
+                <small>Assessment includes exams, assignments, and other forms of assessment.</small>
+                <Row>
+                    <Col>
+                        <RangeSlider
+                            type="range"
+                            onChange={handleAssessmentRatingChange}
+                            value={assessmentRating}
+                            min={0}
+                            max={5}
+                            step={0.25}
+                        />
+                    </Col>
+                    <Col>
+                        <Form.Control value={assessmentRating} onChange={handleAssessmentRatingChange}/>
+                    </Col>
+                </Row>
+
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Assessment Review:</Form.Label>
+                <Form.Control as="textarea"
+                              onChange={handleAssessmentReviewChange}/>
             </Form.Group>
 
             <Form.Group className="mb-3">

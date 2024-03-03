@@ -14,11 +14,13 @@ class Module(models.Model):
     lecturersNames = models.CharField(max_length=80, null=True)
 
 class Feedback(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     academicYear = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     materialRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     materialFeedback = models.CharField(max_length=2000, null=True, blank=True)
+    assessmentRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    assessmentFeedback = models.CharField(max_length=2000, null=True, blank=True)
     lecturerRating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     lecturerFeedback = models.CharField(max_length=2000, null=True, blank=True)
     submitDate = models.DateTimeField(auto_now_add=True)

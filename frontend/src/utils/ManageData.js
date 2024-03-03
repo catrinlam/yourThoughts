@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Table, Form, Button} from 'react-bootstrap';
 import api from "./api";
 
@@ -31,10 +31,16 @@ const ManageModels = ({
 
     const handleCreateOrUpdate = async () => {
         try {
+            const processedFormData = Object.entries(formData).reduce((acc, [key, value]) => {
+                acc[key] = value === '' ? null : value;
+                return acc;
+            }, {});
+            const {id, ...dataWithoutId} = processedFormData;
+            const dataToSubmit = editItemId ? processedFormData : dataWithoutId;
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const endpoint = editItemId ? apiEndpoints.edit(editItemId) : apiEndpoints.create;
-            await api[editItemId ? 'put' : 'post'](endpoint, formData, {headers});
+            await api[editItemId ? 'put' : 'post'](endpoint, dataToSubmit, {headers});
             await fetchItems();
             setShowForm(false);
             setEditItemId(null);
@@ -44,8 +50,21 @@ const ManageModels = ({
         }
     };
 
+    useEffect(() => {
+    if (showForm && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showForm]);
+
+    const handleCreate = () => {
+        setShowForm(true);
+        // formRef.current.scrollIntoView({behavior: 'smooth'});
+        if (formRef.current) {
+            formRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+    }
+
     const handleEdit = (item) => {
-        console.log(item);
         const initialFormData = formFields.reduce((acc, field) => {
             if (item.user && field in item.user) {
                 return {...acc, [field]: item.user[field]};
@@ -57,7 +76,9 @@ const ManageModels = ({
         setFormData(initialFormData);
         setEditItemId(item.id);
         setShowForm(true);
-        formRef.current.scrollIntoView({behavior: 'smooth'});
+        if (formRef.current) {
+            formRef.current.scrollIntoView({behavior: 'smooth'});
+        }
     };
 
 
@@ -79,7 +100,7 @@ const ManageModels = ({
             <h2>Manage {itemDescriptor}</h2>
             <div className="table-responsive">
                 {canCreate && !showForm && (
-                    <Button className="mb-3" variant="info" onClick={() => setShowForm(true)}>
+                    <Button className="mb-3" variant="info" onClick={handleCreate}>
                         {`Create ${itemDescriptor}`}
                     </Button>
                 )}

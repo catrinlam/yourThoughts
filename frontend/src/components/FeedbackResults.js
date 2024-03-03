@@ -47,6 +47,15 @@ function FeedbackResults() {
         return (materialRatingSum / moduleResults.length).toFixed(2);
     }, [moduleResults]);
 
+    const assessmentRatingAvg = useMemo(() => {
+        if (!moduleResults || moduleResults.length === 0) {
+            return "No ratings yet";
+        }
+
+        const assessmentRatingSum = moduleResults.reduce((sum, result) => sum + result.assessmentRating, 0);
+        return (assessmentRatingSum / moduleResults.length).toFixed(2);
+    }, [moduleResults]);
+
     const lecturerRatingAvg = useMemo(() => {
         if (!moduleResults || moduleResults.length === 0) {
             return "No ratings yet";
@@ -80,7 +89,10 @@ function FeedbackResults() {
                     {selectedModule ? selectedModule.title : "Select a module..."}
                 </Dropdown.Toggle>
 
-                <Dropdown.Menu>
+                <Dropdown.Menu show style={{
+                    maxHeight: "300px",
+                    overflowY: "auto",
+                }}>
 
                     <Form.Control
                         autoFocus
@@ -121,10 +133,30 @@ function FeedbackResults() {
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>
+                        <Accordion defaultActiveKey="1">
+                            <Accordion.Item eventKey="1">
+                                <Accordion.Header>Assessment</Accordion.Header>
+                                <Accordion.Body>
+                                    <ListGroup variant="flush">
+                                        <ListGroupItem>
+                                            <strong>Assessment Ratings</strong>
+                                            <p>Average Assessment Rating: {assessmentRatingAvg}</p>
+                                        </ListGroupItem>
+                                        <ListGroupItem>
+                                            <strong>Assessment Feedbacks</strong>
+                                            <br/>
+                                            <p>Summary:</p>
+                                            <p>{summary.summary_assessment}</p>
+                                            {renderFeedbackItems(moduleResults.map(result => result.ssessmentFeedback), 'Feedback')}
+                                        </ListGroupItem>
+                                    </ListGroup>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
                         {user && (
                             <>
-                                <Accordion defaultActiveKey="1">
-                                    <Accordion.Item eventKey="1">
+                                <Accordion defaultActiveKey="2">
+                                    <Accordion.Item eventKey="2">
                                         <Accordion.Header>Lecturer</Accordion.Header>
                                         <Accordion.Body>
                                             <ListGroup variant="flush">

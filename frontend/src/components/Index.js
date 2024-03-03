@@ -21,8 +21,8 @@ const Index = () => {
                     View feedback on modules, lecturers and academic years. by clicking the button below.
                 </p>
                 <Button as={Link} to="/results" variant="primary" className="mb-2 me-3">View Module Feedback</Button>
-                {!user &&
-                    <Button as={Link} to="/auth" variant="secondary" className="mb-2">Log in/Sign up for more features</Button>}
+                {user && <Button as={Link} to="/feedback" variant="secondary" className="mb-2 me-3">Leave Module Feedback</Button>}
+                {!user && <Button as={Link} to="/auth" variant="secondary" className="mb-2">Log in/Sign up for more features</Button>}
             </Container>
         </div>
     );
