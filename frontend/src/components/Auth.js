@@ -10,6 +10,7 @@ const AuthPage = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     return (
         <div className="auth-container">
@@ -54,6 +55,21 @@ const AuthPage = () => {
                             <Form.Control type="password" placeholder="Password"
                                           onChange={(e) => setPassword(e.target.value)} name="password"/>
                         </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Confirm Password"
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                name="confirmPassword"
+                            />
+                            {password !== confirmPassword && confirmPassword && (
+                                <Form.Text style={{color: 'red'}}>
+                                    Passwords do not match!
+                                </Form.Text>
+                            )}
+                        </Form.Group>
+                        {/*<small>Enter the same password as before, for verification.</small>*/}
                         <Button type="submit" variant="info">Submit</Button>
                     </Form>
                 </Tab>

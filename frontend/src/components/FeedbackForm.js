@@ -113,6 +113,11 @@ const FeedbackForm = () => {
             return;
         } else (setFormError(""));
 
+        if (lecturersNamesError || moduleError || formError) {
+            alert('Please fix the errors before submitting.');
+            return;
+        }
+
         const feedback = {
             student: user.studentId,
             academicYear: academicYear,
