@@ -1,8 +1,9 @@
 import React, {useState, useMemo, useContext, useEffect} from 'react'
-import {Form, Dropdown, Accordion, Card, ListGroup, ListGroupItem, Alert} from 'react-bootstrap';
+import {Form, Dropdown, Accordion, Card, ListGroup, ListGroupItem, Alert, Button} from 'react-bootstrap';
 import AuthContext from "../context/AuthContext";
 import api from "../utils/api";
 import useFetchData from "../utils/FetchData";
+import {Link} from "react-router-dom";
 
 function FeedbackResults() {
     const {user} = useContext(AuthContext);
@@ -109,6 +110,9 @@ function FeedbackResults() {
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
+            {selectedAcademicYear && selectedModule && <Button as={Link} to={`https://www.cs.bham.ac.uk/internal/modules/${selectedAcademicYear.label}/${selectedModule.code}/`} className="mb-2 me-2" target="_blank"
+                                                          rel="noopener noreferrer">Module details</Button>}
+            {!user && selectedAcademicYear && selectedModule && <Button as={Link} to="/auth" variant="secondary" className="mb-2">Log in/Sign up for feedbacks on other aspect of the module</Button>}
             {
                 moduleResults && (
                     <Card>

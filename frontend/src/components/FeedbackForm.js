@@ -191,6 +191,7 @@ const FeedbackForm = () => {
 
             <Form.Group className="mb-3">
                 <Form.Label>Assessment Rating:</Form.Label>
+                <br/>
                 <small>Assessment includes exams, assignments, and other forms of assessment.</small>
                 <Row>
                     <Col>
