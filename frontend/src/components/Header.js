@@ -40,13 +40,3 @@ function Header() {
 }
 
 export default Header;
-
-// <Dropdown>
-//     <Dropdown.Toggle className="d-block">
-//         {user.username}
-//     </Dropdown.Toggle>
-//     <Dropdown.Menu className="text-small">
-//         <Dropdown.Item>Logout</Dropdown.Item>
-//     </Dropdown.Menu>
-// </Dropdown>
-

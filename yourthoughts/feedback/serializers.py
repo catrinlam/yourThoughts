@@ -62,14 +62,16 @@ class ModuleSerializer(serializers.ModelSerializer):
 class AnonymousFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
-        fields = ['academicYear', 'module', 'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback']
+        fields = ['academicYear', 'module', 'materialRating', 'materialFeedback', 'assessmentRating',
+                  'assessmentFeedback']
 
 
 class AuthenticatedFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating',
+                  'lecturerFeedback', 'submitDate']
 
 
 class AnonymousFeedbackSummarySerializer(serializers.ModelSerializer):
@@ -95,17 +97,12 @@ class AuthenticatedFeedbackSummarySerializer(serializers.ModelSerializer):
         fields = ['module', 'academicYear', 'summary_material', 'summary_assessment', 'summary_lecturer']
 
 
-# class MaterialFeedbackSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Feedback
-#         fields = ['materialFeedback']
-
-
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating',
+                  'lecturerFeedback', 'submitDate']
 
 
 class FeedbackListSerializer(serializers.ModelSerializer):
@@ -115,4 +112,5 @@ class FeedbackListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['id', 'student', 'academicYear', 'module',
-                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating', 'lecturerFeedback', 'submitDate']
+                  'materialRating', 'materialFeedback', 'assessmentRating', 'assessmentFeedback', 'lecturerRating',
+                  'lecturerFeedback', 'submitDate']

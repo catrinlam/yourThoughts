@@ -80,8 +80,6 @@ function FeedbackResults() {
         );
     };
 
-    const convertToPercentage = (ratingAvg) => ratingAvg * 20;
-
     return (
         <div className="container mt-4">
             <h2 className="mb-3">Module Survey Results</h2>

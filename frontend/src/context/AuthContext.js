@@ -1,5 +1,5 @@
 import {createContext, useCallback, useEffect, useState} from 'react';
-import {jwtDecode} from 'jwt-decode'; // Use named import for jwtDecode
+import {jwtDecode} from 'jwt-decode';
 import {useNavigate} from 'react-router-dom';
 import api from "../utils/api";
 
@@ -72,11 +72,11 @@ export const AuthProvider = ({children}) => {
                 setUser(decodedUser);
                 navigate('/results');
             } else {
-                alert('Something went wrong while logging in the user. The username or passoword may be wrong. Please try again.');
+                alert('Something went wrong while logging in the user. The username or password may be wrong. Please try again.');
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Failed to login. The username or passoword may be wrong. Please try again.');
+            alert('Failed to login. The username or password may be wrong. Please try again.');
         }
     };
 

@@ -36,7 +36,7 @@ const FeedbackForm = () => {
         if (academicYearsList.length > 0) {
             const sortedYears = academicYearsList.sort((a, b) => b.year - a.year);
             const latestYear = sortedYears[0];
-            setAcademicYear(latestYear.id); // Assuming you're using the ID as the value
+            setAcademicYear(latestYear.id);
         }
     }, [academicYearsList]);
 
