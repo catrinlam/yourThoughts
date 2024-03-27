@@ -7,6 +7,8 @@ import {Link} from "react-router-dom";
 
 function FeedbackResults() {
     const {user} = useContext(AuthContext);
+    const currentMonth = new Date().getMonth() + 1;
+    const isModuleSelectionPeriod = currentMonth >= 3 && currentMonth < 9;
     const {dataList: moduleList} = useFetchData('/api/modules/');
     const {dataList: academicYearsList} = useFetchData('/api/academicyears/');
     const [filterModuleValue, setfilterModuleValue] = useState('');
@@ -108,13 +110,23 @@ function FeedbackResults() {
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
-            {selectedAcademicYear && selectedModule && <Button as={Link} to={`https://students.oc1.aws.cs.bham.ac.uk/curriculum/${selectedAcademicYear.label + 1}/modules/${selectedModule.code}`}//`https://www.cs.bham.ac.uk/internal/modules/${selectedAcademicYear.label}/${selectedModule.code}/`}
-                className="mb-2 me-2" target="_blank" rel="noopener noreferrer">Module details</Button>}
-            {!user && selectedAcademicYear && selectedModule && <Button as={Link} to="/auth" variant="secondary" className="mb-2">Log in/Sign up for feedbacks on other aspect of the module</Button>}
+            {selectedAcademicYear && selectedModule && (
+                <>
+                    <Button as={Link}
+                            to={`https://students.oc1.aws.cs.bham.ac.uk/curriculum/${selectedAcademicYear.label}/modules/${selectedModule.code}`}//`https://www.cs.bham.ac.uk/internal/modules/${selectedAcademicYear.label}/${selectedModule.code}/`}
+                            className="mb-2 me-2" target="_blank" rel="noopener noreferrer">Module details for the current academic year</Button>
+                    {isModuleSelectionPeriod && <Button as={Link}
+                            to={`https://students.oc1.aws.cs.bham.ac.uk/curriculum/${selectedAcademicYear.label + 1}/modules/${selectedModule.code}`}
+                            className="mb-2 me-2" target="_blank" rel="noopener noreferrer">Have a look at the module details for the next academic year</Button>}
+                </>
+            )}
+            {!user && selectedAcademicYear && selectedModule &&
+                <Button as={Link} to="/auth" variant="secondary" className="mb-2">Log in/Sign up for feedbacks on other
+                    aspect of the module</Button>}
             {
                 moduleResults && (
                     <Card>
-                        <Card.Header as="h3">Results for {selectedModule.title}</Card.Header>
+                        <Card.Header as="h3">Results for {selectedModule.title} in {selectedAcademicYear.label}</Card.Header>
                         <Accordion defaultActiveKey="0">
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>Material</Accordion.Header>
