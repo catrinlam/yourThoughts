@@ -29,14 +29,31 @@ const ManageModels = ({
         }
     };
 
-    const handleCreateOrUpdate = async () => {
+    const handleCreateOrUpdate = async (e) => {
+        e.preventDefault();
         try {
+            let dataToSubmit = {};
             const processedFormData = Object.entries(formData).reduce((acc, [key, value]) => {
                 acc[key] = value === '' ? null : value;
                 return acc;
             }, {});
-            const {id, ...dataWithoutId} = processedFormData;
-            const dataToSubmit = editItemId ? processedFormData : dataWithoutId;
+
+            if (editItemId) {
+                dataToSubmit = {...formData};
+            } else {
+                if (itemDescriptor === "Users") {
+                    dataToSubmit = {
+                        user: {
+                            username: formData.username,
+                            email: formData.email,
+                            password: formData.password
+                        }
+                    };
+                } else {
+                    const {id, ...dataWithoutId} = processedFormData;
+                    dataToSubmit = dataWithoutId;
+                }
+            }
             const authTokens = JSON.parse(localStorage.getItem('authTokens'));
             const headers = authTokens ? {'Authorization': `Bearer ${authTokens.access}`} : {};
             const endpoint = editItemId ? apiEndpoints.edit(editItemId) : apiEndpoints.create;
@@ -45,16 +62,17 @@ const ManageModels = ({
             setShowForm(false);
             setEditItemId(null);
             setFormData({});
+
         } catch (e) {
             console.error(e);
         }
     };
 
     useEffect(() => {
-    if (showForm && formRef.current) {
-      formRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [showForm]);
+        if (showForm && formRef.current) {
+            formRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+    }, [showForm]);
 
     const handleCreate = () => {
         setShowForm(true);

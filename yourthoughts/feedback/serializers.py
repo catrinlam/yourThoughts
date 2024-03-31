@@ -23,6 +23,17 @@ class StudentSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**user_data)
         return Student.objects.create(user=user, **validated_data)
 
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', None)
+        if user_data:
+            user = instance.user
+            user.username = user_data.get('username', user.username)
+            user.email = user_data.get('email', user.email)
+            user.is_staff = user_data.get('is_staff', user.is_staff)
+            if 'password' in user_data:
+                user.set_password(user_data['password'])
+            user.save()
+        return super().update(instance, validated_data)
 
 class ProfileSerializer(serializers.ModelSerializer):
     student = UserSerializer(many=False)

@@ -90,7 +90,7 @@ const AdminDashboard = () => {
                             delete: (id) => `/api/accounts/deleteuser/${id}/`,
                             edit: (id) => `/api/accounts/edituser/${id}/`
                         }}
-                        formFields={['id', 'username', 'email', 'is_staff']}
+                        formFields={['id', 'username', 'email', 'password']}
                         displayFields={[
                             {
                                 field: 'username',

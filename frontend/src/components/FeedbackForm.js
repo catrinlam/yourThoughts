@@ -14,11 +14,11 @@ const FeedbackForm = () => {
     const [filterModuleValue, setfilterModuleValue] = useState('');
     const [lecturersNames, setLecturersNames] = useState('');
     const [academicYear, setAcademicYear] = useState(0);
-    const [materialRating, setMaterialRating] = useState(0);
+    const [materialRating, setMaterialRating] = useState(null);
     const [materialReview, setMaterialReview] = useState('');
-    const [assessmentRating, setAssessmentRating] = useState(0);
+    const [assessmentRating, setAssessmentRating] = useState(null);
     const [assessmentReview, setAssessmentReview] = useState('');
-    const [lecturerRating, setLecturerRating] = useState(0);
+    const [lecturerRating, setLecturerRating] = useState(null);
     const [lecturerReview, setLecturerReview] = useState('');
     const [module, setModule] = useState('');
     const [selectedModule, setSelectedModule] = useState(null);

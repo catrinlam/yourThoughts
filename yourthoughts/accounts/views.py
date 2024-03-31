@@ -38,18 +38,39 @@ class Profile(generics.RetrieveUpdateAPIView):
 class ListUsers(generics.ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
 
 class CreateUser(generics.CreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class EditUser(generics.UpdateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-    permission_classes = [permissions.IsAdminUser]
+    def perform_create(self, serializer):
+        user_data = serializer.validated_data['user']
+        if User.objects.filter(email=user_data['email']).exists():
+            raise ValidationError({"detail": "A user with this email already exists"})
+        else:
+            student = serializer.save()
+            Token.objects.create(user=student.user)
+
 class DeleteUser(generics.DestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            student = self.get_object()
+            user = student.user
+            student.delete()
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except Student.DoesNotExist:
+            raise NotFound(detail="Student not found")
+
+
+# class EditUser(generics.UpdateAPIView):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
+#     permission_classes = [permissions.AllowAny]

@@ -42,7 +42,7 @@ function FeedbackResults() {
     };
 
     const materialRatingAvg = useMemo(() => {
-        if (!moduleResults || moduleResults.length === 0) {
+        if (!moduleResults || moduleResults.length === 0 || moduleResults.every(result => result.materialRating === null)) {
             return "No ratings yet";
         }
 
@@ -51,7 +51,7 @@ function FeedbackResults() {
     }, [moduleResults]);
 
     const assessmentRatingAvg = useMemo(() => {
-        if (!moduleResults || moduleResults.length === 0) {
+        if (!moduleResults || moduleResults.length === 0 || moduleResults.every(result => result.assessmentRating === null)) {
             return "No ratings yet";
         }
 
@@ -60,7 +60,7 @@ function FeedbackResults() {
     }, [moduleResults]);
 
     const lecturerRatingAvg = useMemo(() => {
-        if (!moduleResults || moduleResults.length === 0) {
+        if (!moduleResults || moduleResults.length === 0 || moduleResults.every(result => result.lecturerRating === null)) {
             return "No ratings yet";
         }
 
@@ -69,9 +69,11 @@ function FeedbackResults() {
     }, [moduleResults]);
 
     const renderFeedbackItems = (feedbackList, label) => {
+        const hasFeedback = feedbackList.some(feedback => feedback !== null && feedback.trim() !== "");
+
         return (
             <>
-                {feedbackList.length > 0 ? (
+                {feedbackList.length > 0 && hasFeedback ? (
                     feedbackList.map((feedback, index) => (
                         <ListGroupItem key={index}>
                             <strong>{label} {index + 1}:</strong> {feedback}
@@ -115,7 +117,7 @@ function FeedbackResults() {
                     <Button as={Link}
                             to={`https://students.oc1.aws.cs.bham.ac.uk/curriculum/${selectedAcademicYear.label}/modules/${selectedModule.code}`}//`https://www.cs.bham.ac.uk/internal/modules/${selectedAcademicYear.label}/${selectedModule.code}/`}
                             className="mb-2 me-2" target="_blank" rel="noopener noreferrer">Module details for the current academic year</Button>
-                    {isModuleSelectionPeriod && <Button as={Link}
+                    {isModuleSelectionPeriod && <Button as={Link} variant={"info"}
                             to={`https://students.oc1.aws.cs.bham.ac.uk/curriculum/${selectedAcademicYear.label + 1}/modules/${selectedModule.code}`}
                             className="mb-2 me-2" target="_blank" rel="noopener noreferrer">Have a look at the module details for the next academic year</Button>}
                 </>
@@ -161,7 +163,7 @@ function FeedbackResults() {
                                             <br/>
                                             <p>Summary:</p>
                                             <p>{summary.summary_assessment}</p>
-                                            {renderFeedbackItems(moduleResults.map(result => result.ssessmentFeedback), 'Feedback')}
+                                            {renderFeedbackItems(moduleResults.map(result => result.assessmentFeedback), 'Feedback')}
                                         </ListGroupItem>
                                     </ListGroup>
                                 </Accordion.Body>
