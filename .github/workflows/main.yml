@@ -43,9 +43,7 @@ jobs:
         key: ${{ secrets.DEPLOY_SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ${{ secrets.TEST_DIR }}
-          python manage.py test
-          cd
           cd ${{ secrets.DEPLOY_DIR }}
           sudo docker-compose down -v
           sudo docker-compose up --build -d
+          sudo docker exec -it yourthoughts-backend-1 python3 manage.py test --settings=yourthoughts.production_settings
