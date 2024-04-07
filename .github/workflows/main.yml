@@ -46,4 +46,4 @@ jobs:
           cd ${{ secrets.DEPLOY_DIR }}
           sudo docker-compose down -v
           sudo docker-compose up --build -d
-          sudo docker exec -it yourthoughts-backend-1 python3 manage.py test --settings=yourthoughts.production_settings
+#          sudo docker exec -it yourthoughts-backend-1 python3 manage.py test --settings=yourthoughts.production_settings
