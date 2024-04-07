@@ -43,14 +43,9 @@ jobs:
         key: ${{ secrets.DEPLOY_SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
+          cd ${{ secrets.TEST_DIR }}
+          python manage.py test
+          cd
           cd ${{ secrets.DEPLOY_DIR }}
           sudo docker-compose down -v
           sudo docker-compose up --build -d
-          #sudo docker-compose exec backend python manage.py shell --settings=yourthoughts.production_settings -c "from django.apps import apps; for model in apps.get_models(): model.objects.all().delete()"
-          # Delete all data in the database
-          # sudo docker-compose exec backend python manage.py shell --settings=yourthoughts.production_settings -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(is_superuser=True).delete()"
-          # Delete the superuser
-          # sudo docker-compose exec backend python manage.py delete_all_data
-          # sudo docker exec -it yourthoughts-backend-1 echo "from django.contrib.auth.models import User; User.objects.create_superuser('${{ secrets.ADMIN_USERNAME }}', '${{ secrets.ADMIN_EMAIL }}', '${{ secrets.ADMIN_PASSWORD }}')" | python3 manage.py shell --settings=yourthoughts.production_settings
-          # sudo docker-compose exec backend python manage.py  shell --settings=yourthoughts.production_settings -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${{ secrets.ADMIN_USERNAME }}', '${{ secrets.ADMIN_EMAIL }}', '${{ secrets.ADMIN_PASSWORD }}')"
-          # Create a new superuser

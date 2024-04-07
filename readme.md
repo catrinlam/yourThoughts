@@ -1,0 +1,1 @@
+The app has been deployed on yourthoughts.me for [insert reasons here], to view it click here: [insert link

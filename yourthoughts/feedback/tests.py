@@ -1,154 +1,171 @@
-from django.contrib.auth.models import User
-from django.urls import reverse
-from rest_framework.test import APIClient
 from django.test import TestCase
-from django.core.exceptions import ValidationError
-from .models import Student, Feedback, AcademicYear, Module
-
-class StudentTestCase(TestCase):
-    def setUp(self):
-        student = User.objects.create_user(username="student", email="student@email.com", password="password")
-        Student.objects.create(student=student)
-
-    def test_student(self):
-        student = Student.objects.get(student__email="student@email.com")
-        self.assertEqual(student.student.email, 'student@email.com')
-        self.assertTrue(student.student.check_password('password'))
-
-
-class AcademicYearModelTestCase(TestCase):
-    def setUp(self):
-        self.academic_year = AcademicYear.objects.create(year="2022-2023")
-
-    def test_academic_year_year(self):
-        self.assertEqual(self.academic_year.year, '2022-2023')
-
-class ModuleModelTestCase(TestCase):
-    def setUp(self):
-        self.module = Module.objects.create(code="TEST1234", title="Test Module")
-
-    def test_module_code(self):
-        self.assertEqual(self.module.code, "TEST1234")
-
-    def test_module_title(self):
-        self.assertEqual(self.module.title, "Test Module")
-
-class FeedbackModelTestCase(TestCase):
-    def setUp(self):
-        student = User.objects.create_user(username="student", email="student@email.com", password="password")
-        self.student = Student.objects.create(student=student)
-        self.academic_year = AcademicYear.objects.create(year="2022-2023")
-        self.module = Module.objects.create(code="TEST1234", title="Test Module")
-        self.feedback = Feedback.objects.create(
-            student=self.student,
-            academicYear=self.academic_year,
-            module=self.module,
-            materialQuestion="How is the material?",
-            lecturerQuestion="How is the lecturer?",
-            materialRating=4.5,
-            lecturerRating=4.0,
-        )
-
-    def test_feedback_material_rating(self):
-        self.assertEqual(self.feedback.materialRating, 4.5)
-
-    def test_feedback_lecturer_rating(self):
-        self.assertEqual(self.feedback.lecturerRating, 4.0)
-
-    def test_feedback_material_question_max_length(self):
-        max_length = self.feedback._meta.get_field("materialQuestion").max_length
-        self.assertLessEqual(len(self.feedback.materialQuestion), max_length)
-
-    def test_feedback_lecturer_question_max_length(self):
-        max_length = self.feedback._meta.get_field("lecturerQuestion").max_length
-        self.assertLessEqual(len(self.feedback.lecturerQuestion), max_length)
-
-    def test_feedback_material_feedback_max_length(self):
-        max_length = self.feedback._meta.get_field("materialFeedback").max_length
-        feedback_text = "a" * (max_length + 1)  # Exceed max length
-        with self.assertRaises(ValidationError):
-            self.feedback.materialFeedback = feedback_text
-            self.feedback.full_clean()
-
-    def test_feedback_lecturer_feedback_max_length(self):
-        max_length = self.feedback._meta.get_field("lecturerFeedback").max_length
-        feedback_text = "a" * (max_length + 1)  # Exceed max length
-        with self.assertRaises(ValidationError):
-            self.feedback.lecturerFeedback = feedback_text
-            self.feedback.full_clean()
-
-    def test_feedback_material_rating_range(self):
-        self.feedback.materialRating = 6.0  # Exceeds max value (5)
-        with self.assertRaises(ValidationError):
-            self.feedback.full_clean()
-
-    def test_feedback_lecturer_rating_range(self):
-        self.feedback.lecturerRating = -1.0  # Below min value (0)
-        with self.assertRaises(ValidationError):
-            self.feedback.full_clean()
-
-    def test_feedback_submit_date_auto_now_add(self):
-        self.assertIsNotNone(self.feedback.submitDate)
+from django.urls import reverse
+from rest_framework import status
+from django.contrib.auth.models import User
+from feedback.models import AcademicYear, Module, Feedback, Student
+from rest_framework.test import APIClient
+from django.db.utils import IntegrityError
 
 class ViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Setup data for the whole TestCase
+        cls.user = User.objects.create_user('testuser', 'test@example.com', 'testpassword')
+        cls.student = Student.objects.create(user=cls.user)
+        cls.academic_year = AcademicYear.objects.create(year=2024)
+        cls.module = Module.objects.create(code='MOD001', title='Test Module', lecturersNames='Dr. Test')
+        Feedback.objects.create(
+            student=cls.student,
+            academicYear=cls.academic_year,
+            module=cls.module,
+            materialRating=4.5,
+            lecturerRating=3.5,
+            materialFeedback="Good material.",
+            lecturerFeedback="Great lecturer."
+        )
+
+        cls.client = APIClient()
+
     def setUp(self):
         self.client = APIClient()
-        student = User.objects.create_user(username="student", email="student@email.com", password="password")
-        self.student = Student.objects.create(student=student)
-        self.client.force_authenticate(user=student)
-        self.academic_year = AcademicYear.objects.create(year="2022-2023")
-        self.module = Module.objects.create(code="TEST1234", title="Test Module")
-        Feedback.objects.create(
-            student=self.student,
-            academicYear=self.academic_year,
-            module=self.module,
-            materialQuestion="How is the material?",
-            lecturerQuestion="How is the lecturer?",
-            materialRating=4.5,
-            lecturerRating=4.0,
-            materialFeedback="material is Good",
-            lecturerFeedback="feedback is Good"
-        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_academic_year_list(self):
+        response = self.client.get(reverse('academicYearList'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_create_duplicate_academic_year(self):
+        with self.assertRaises(IntegrityError):
+            AcademicYear.objects.create(year=2023)
 
     def test_module_list(self):
         response = self.client.get(reverse('moduleList'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
-    def test_feedback_list_anonymous(self):
-        self.client.logout()
-        Feedback.objects.create(
-            student=self.student,
-            academicYear=self.academic_year,
-            module=self.module,
-            materialQuestion="How is the material?",
-            lecturerQuestion="How is the lecturer?",
-            materialRating=4.5,
-            lecturerRating=4.0,
-            materialFeedback="material is Good",
-            lecturerFeedback="feedback is Good"
-        )
-        response = self.client.get(reverse('feedbackList', kwargs={'moduleCode': self.module.code}))
-        self.assertEqual(response.status_code, 200)
+    def test_module_feedback_authenticated(self):
+        response = self.client.get(reverse('moduleFeedbacks', kwargs={'moduleCode': self.module.code}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
         for feedback in response.data:
-            self.assertTrue('lecturerRating' not in feedback)
-            self.assertTrue('lecturerFeedback' not in feedback)
+            self.assertIn('materialRating', feedback)
+            self.assertIn('lecturerRating', feedback)
 
-    def test_feedback_list(self):
-        response = self.client.get(reverse('feedbackList', kwargs={'moduleCode': self.module.code}))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), Feedback.objects.filter(module=self.module).count())
+    def test_module_feedback_unauthenticated(self):
+        self.client.logout()
+        response = self.client.get(reverse('moduleFeedbacks', kwargs={'moduleCode': self.module.code}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        for feedback in response.data:
+            self.assertIn('materialRating', feedback)
+            self.assertNotIn('lecturerRating', feedback)
 
-    def test_feedback_create(self):
-        data = {
+    def test_create_feedback(self):
+        feedback_data = {
             "student": self.student.id,
             "academicYear": self.academic_year.id,
             "module": self.module.id,
-            "materialQuestion": "How is the material?",
-            "lecturerQuestion": "How is the lecturer?",
-            "materialRating": 4.5,
-            "lecturerRating": 4.0,
-            "materialFeedback": "material is Good",
-            "lecturerFeedback": "feedback is Good"
+            "materialFeedback": "Good",
         }
-        response = self.client.post(reverse('newfeedback'), data=data)
-        self.assertEqual(response.status_code, 201)
+        response = self.client.post(reverse('newfeedback'), feedback_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+class AdminViewsTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create an admin user
+        cls.admin_user = User.objects.create_superuser('admin', 'admin@example.com', 'adminpass')
+
+        # Create a regular user
+        cls.regular_user = User.objects.create_user('user', 'user@example.com', 'userpass')
+
+        cls.regular_student = Student.objects.create(user=cls.regular_user)
+        cls.academic_year = AcademicYear.objects.create(year=2024)
+        cls.module = Module.objects.create(code='MOD001', title='Test Module', lecturersNames='Dr. Test')
+        cls.feedback = Feedback.objects.create(student=cls.regular_student,
+                                               academicYear=cls.academic_year,
+                                               module=cls.module,
+                                               materialRating=4.5)
+
+        cls.client = APIClient()
+
+    def authenticate(self, user):
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
+
+    def test_create_academic_year_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.post(reverse('newacademicyear'), {'year': 2025})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Try with non-admin user
+        self.authenticate(self.regular_user)
+        response = self.client.post(reverse('newacademicyear'), {'year': 2026})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_academic_year_admin_only(self):
+        # Assuming an AcademicYear instance with id=1 exists
+        self.authenticate(self.admin_user)
+        response = self.client.delete(reverse('deleteacademicyear', kwargs={'pk': self.academic_year.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Non-admin user should not be able to delete
+        self.authenticate(self.regular_user)
+        response = self.client.delete(reverse('deleteacademicyear', kwargs={'pk': self.academic_year.pk}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_edit_academic_year_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.patch(reverse('editacademicyear', kwargs={'pk': self.academic_year.pk}), {'year': 2022})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.authenticate(self.regular_user)
+        response = self.client.patch(reverse('editacademicyear', kwargs={'pk': self.academic_year.pk}), {'year': 2022})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_module_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.post(reverse('newmodule'), {'code': 'MOD002', 'title': 'New Module'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.authenticate(self.regular_user)
+        response = self.client.post(reverse('newmodule'), {'code': 'MOD003', 'title': 'Another Module'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_module_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.delete(reverse('deletemodule', kwargs={'pk': self.module.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.authenticate(self.regular_user)
+        response = self.client.delete(reverse('deletemodule', kwargs={'pk': self.module.pk}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_edit_module_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.patch(reverse('editmodule', kwargs={'pk': self.module.pk}), {'title': 'Updated Module'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.authenticate(self.regular_user)
+        response = self.client.patch(reverse('editmodule', kwargs={'pk': self.module.pk}), {'title': 'Failed Update'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_feedback_list_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.get(reverse('feedbackList'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.authenticate(self.regular_user)
+        response = self.client.get(reverse('feedbackList'))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_feedback_admin_only(self):
+        self.authenticate(self.admin_user)
+        response = self.client.delete(reverse('deletefeedback', kwargs={'pk': self.feedback.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.authenticate(self.regular_user)
+        response = self.client.delete(reverse('deletefeedback', kwargs={'pk': self.feedback.pk}))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

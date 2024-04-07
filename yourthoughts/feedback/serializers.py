@@ -35,13 +35,6 @@ class StudentSerializer(serializers.ModelSerializer):
             user.save()
         return super().update(instance, validated_data)
 
-class ProfileSerializer(serializers.ModelSerializer):
-    student = UserSerializer(many=False)
-
-    class Meta:
-        model = Student
-        fields = ['id', 'student']
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

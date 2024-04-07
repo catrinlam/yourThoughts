@@ -24,16 +24,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
     serializer_class = MyTokenObtainPairSerializer
 
-class Profile(generics.RetrieveUpdateAPIView):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        student = Student.objects.get(user=request.user)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data)
-
 """Admin only views"""
 class ListUsers(generics.ListAPIView):
     queryset = Student.objects.all()
@@ -68,9 +58,3 @@ class DeleteUser(generics.DestroyAPIView):
 
         except Student.DoesNotExist:
             raise NotFound(detail="Student not found")
-
-
-# class EditUser(generics.UpdateAPIView):
-#     queryset = Student.objects.all()
-#     serializer_class = StudentSerializer
-#     permission_classes = [permissions.AllowAny]
