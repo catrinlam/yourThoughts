@@ -7,15 +7,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-
-    - name: Set up secret file
+    - name: Set env as secret
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        ...
-        ...
+        SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        REMOTE_HOST: ${{ secrets.HOSTNAME }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        REMOTE_PORT: ${{ secrets.PORT }}
+        TARGET: ${{ secrets.DEPLOY_DIR }}
       run: |
-        echo ${{secrets.AWS_ACCESS_KEY_ID}} | sed 's/./& /g'
-        ...
-        ...
+        import os
+        env_vars = ["SSH_KEY", "REMOTE_HOST", "REMOTE_USER", "REMOTE_PORT", "TARGET"]
+        for var in env_vars:
+          print(f"{var}: {os.getenv(var)}")
+      shell: python
